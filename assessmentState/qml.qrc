@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>line.qml</file>
+        <file>funckBlock.qml</file>
+        <file>parameters.qml</file>
+        <file>bigButton.qml</file>
+        <file>smallButton.qml</file>
+        <file>theme.qml</file>
+        <file>info.qml</file>
+        <file>errorInfo.qml</file>
+        <file>table.qml</file>
+        <file>list.qml</file>
+        <file>items.qml</file>
+        <file>table2.qml</file>
+        <file>expressHelpBASI.qml</file>
+        <file>table3.qml</file>
+        <file>expressHelp.qml</file>
+        <file>expressHelpPPO.qml</file>
+        <file>DB.qml</file>
+    </qresource>
+</RCC>

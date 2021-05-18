@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>onboardEquipment.json</file>
+    </qresource>
+</RCC>

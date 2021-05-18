@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/arrow.png</file>
+        <file>images/ArrowBigBlack.png</file>
+        <file>images/ArrowBigBlue.png</file>
+        <file>images/ArrowBigWhite.png</file>
+        <file>images/ArrowSmallBlack.png</file>
+        <file>images/ArrowSmallWhite.png</file>
+        <file>images/BAPDDark.png</file>
+        <file>images/BAPDLight.png</file>
+        <file>images/BASIDark.png</file>
+        <file>images/BASILight.png</file>
+        <file>images/Group 1.png</file>
+        <file>images/no.png</file>
+        <file>images/PPODark.png</file>
+        <file>images/PPOLight.png</file>
+        <file>images/PPUDark.png</file>
+        <file>images/PPULight.png</file>
+        <file>images/StateActive.png</file>
+        <file>images/StateDark.png</file>
+        <file>images/StateLight.png</file>
+        <file>images/ThemeDark.png</file>
+        <file>images/ThemeLiewf.png</file>
+        <file>images/ThemeLight.png</file>
+        <file>images/yes.png</file>
+        <file>images/Minus.png</file>
+        <file>images/PlusDark.png</file>
+        <file>images/PlusLight.png</file>
+        <file>images/StateWrong.png</file>
+        <file>images/CrossDark.png</file>
+        <file>images/CrossLight.png</file>
+    </qresource>
+</RCC>
