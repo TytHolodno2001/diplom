@@ -3,16 +3,25 @@ import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
 import Param 1.0
 
+// Объект: Таблица для вывода из БД
+// Название: DB
+// Переменные:
+// itemText - текст для кнопки 1;
+// itemTextOnClick - текст для кнопки 2;
+// textMain - главный текст кнопки;
+// click - нажата ли кнопка;
+// onClick - сигнал при клике на кнопку.
 Item {
-    property string itemText: "Текст"
-    property string itemTextOnClick: "Текст"
+    // объявление перменных
+    property string itemText
+    property string itemTextOnClick
     property string textMain: itemTextOnClick
     property bool click: false
     signal onClick();
+    //кнопка
+    // hovered - наведено ли на кнопку
     Rectangle {
         id:bigButton
-
-        //для наведения
         property bool hovered: false
 
         width: Param.buttonBigWidth
@@ -35,7 +44,7 @@ Item {
             anchors.fill: parent
             hoverEnabled : true
 
-            // при наведении
+            //событие при наведении и после
             onEntered:{
                 bigButton.border.width = Param.sizeFrame
                 bigButton.border.color = Param.accentСolor3
@@ -44,7 +53,7 @@ Item {
                 bigButton.border.width = 0
             }
 
-            //при клике
+            //событие при клике и после
             onPressed: bigButton.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
             onReleased:{
                 themeChange.connect(function(){
@@ -52,6 +61,7 @@ Item {
                 })
                 bigButton.color = darkTheme?Param.delemFirstColor:Param.lelemFirstColor}
 
+            //событие при клике
             onClicked:{
                 onClick()
                 click = !click
@@ -60,7 +70,7 @@ Item {
         }
     }
 
-    //тени
+    //тень объекта
     DropShadow {
         anchors.fill: bigButton
         horizontalOffset: Param.horizOffset

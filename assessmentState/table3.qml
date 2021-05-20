@@ -3,8 +3,18 @@ import QtQuick.Controls 2.5
 import Qt.labs.qmlmodels 1.0
 import Param 1.0
 import QtGraphicalEffects 1.12
+
+// Объект: Таблица 3
+// Название: table3
+// Переменные:
+// title - заголовок формы объекта;
+// tableCell - информация о компоненте БА;
+// statePar - состояние;
+// close - сигнал закрытия формы объекта.
 Rectangle{
     id: main_rec
+
+    // объявление перменных
     property int smallWidth: Param.tableSmallWidth
     property int bigWidth: Param.tableMediumWidth
     property int headHeight: Param.tableHeadHeight
@@ -31,7 +41,7 @@ Rectangle{
         visible: true
         radius: Param.elemRadius
 
-        //первая строка - заголовка
+        //заголовок
         Rectangle {
             id:title
             width: bigWidth
@@ -54,6 +64,7 @@ Rectangle{
             }
         }
 
+        //кнопка для отоброжения только ошибок
         Rectangle {
             id:onlyError
             width: Param.tableButtonWidth
@@ -66,7 +77,7 @@ Rectangle{
             radius: Param.elemRadius
             border.color: borderColor
             border.width: Param.sizeFrame
-visible:statePar=="ok"?false:true
+            visible:statePar=="ok"?false:true
             Text {
                 text: "ошибки"
                 font.family: Param.textFontFamily
@@ -84,7 +95,7 @@ visible:statePar=="ok"?false:true
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -92,7 +103,7 @@ visible:statePar=="ok"?false:true
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -102,9 +113,10 @@ visible:statePar=="ok"?false:true
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+                //событие при клике
                 onClicked: {
                     all_ma.active = false
                     active = true
@@ -123,6 +135,7 @@ visible:statePar=="ok"?false:true
             }
         }
 
+        //кнопка для отоброжения всех данных
         Rectangle {
             id:all
             width: Param.tableButtonWidth
@@ -135,7 +148,7 @@ visible:statePar=="ok"?false:true
             radius: Param.elemRadius
             border.color: Param.accentСolor1
             border.width: Param.sizeFrame
-visible:statePar=="ok"?false:true
+            visible:statePar=="ok"?false:true
             Text {
                 text: "все"
                 font.family: Param.textFontFamily
@@ -149,11 +162,11 @@ visible:statePar=="ok"?false:true
             //отобразить только с ошибками
             MouseArea {
                 id: all_ma
-                 property bool active: false
+                property bool active: false
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -161,7 +174,7 @@ visible:statePar=="ok"?false:true
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -171,9 +184,10 @@ visible:statePar=="ok"?false:true
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+                //событие при клике
                 onClicked: {
                     err_ma.active = false
                     active = true
@@ -185,6 +199,7 @@ visible:statePar=="ok"?false:true
             }
         }
 
+        // кнопка закрытия формы объекта
         Rectangle {
             id:cross
             width: headHeight
@@ -203,16 +218,15 @@ visible:statePar=="ok"?false:true
             //закрыть окно
             MouseArea {
                 anchors.fill: parent
+                //событие при клике
                 onClicked: {
                     main_rec.close()
-
                 }
             }
         }
 
 
         //таблица
-        //сам список
         Rectangle {
             id: listPar
             anchors.top: parent.top
@@ -228,7 +242,6 @@ visible:statePar=="ok"?false:true
             ListModel {
                 id: listModel
                 Component.onCompleted: {
-
                 }
             }
 
@@ -247,7 +260,6 @@ visible:statePar=="ok"?false:true
                         anchors.left: parent.left
                         anchors.leftMargin: 0
                         Text {
-                            //param: "Параметр ", value: "000000*", min: "000000", max: "000000"
                             text: param
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -268,7 +280,6 @@ visible:statePar=="ok"?false:true
                         anchors.left: parent.left
                         anchors.leftMargin: parent.width/4
                         Text {
-                            //param: "Параметр ", value: "000000*", min: "000000", max: "000000"
                             text: value
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -289,7 +300,6 @@ visible:statePar=="ok"?false:true
                         anchors.left: parent.left
                         anchors.leftMargin:parent.width/4*2
                         Text {
-                            //param: "Параметр ", value: "000000*", min: "000000", max: "000000"
                             text: min
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -310,7 +320,6 @@ visible:statePar=="ok"?false:true
                         anchors.left: parent.left
                         anchors.leftMargin: parent.width/4 *3
                         Text {
-                            //param: "Параметр ", value: "000000*", min: "000000", max: "000000"
                             text: max
                             font.family: Param.textFontFamily
                             anchors.fill: parent

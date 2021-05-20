@@ -4,9 +4,25 @@ import Qt.labs.qmlmodels 1.0
 import Param 1.0
 import QtGraphicalEffects 1.12
 
-
+// Объект: итоговая справка ППО
+// Название: expressHelpPPO
+// Переменные:
+// title - заголовок объекта;
+// numberProduct - номер БА;
+// dateProduct - дата эксплуатации БА;
+// timeProduct - время эксплуатации БА;
+// itemComp - информация о компонентах БА;
+// close - сигнал закрытия формы объекта;
+// tn - Тн;
+// tk - Тк;
+// basi - состояние БАСИ;
+// bapd - состояние БАПД;
+// si - состояние информации;
+// mn - маркер недостоверности.
 Rectangle{
     id: main_rec
+
+    // объявление перменных
     property int smallWidth: Param.tableSmallWidth
     property int bigWidth: Param.tableBigWidth
     property int headHeight: Param.tableHeadHeight
@@ -41,7 +57,7 @@ Rectangle{
         visible: true
         radius: Param.elemRadius
 
-        //первая строка - заголовка
+        // Загаловок
         Rectangle {
             id:title
             width: headHeight + smallWidth*2 + bigWidth
@@ -65,7 +81,7 @@ Rectangle{
             }
         }
 
-
+        // кнопка закрытия формы объекта
         Rectangle {
             id:cross
             width: headHeight
@@ -84,14 +100,14 @@ Rectangle{
             //закрыть окно
             MouseArea {
                 anchors.fill: parent
+                //событие при клике
                 onClicked: {
                     main_rec.close()
-
                 }
             }
         }
 
-        //номер изделия, дата и время
+        //Информация о номере изделия, дате и времени
         Rectangle {
             id:numberProduct
             width: headHeight + smallWidth*2 + bigWidth
@@ -140,7 +156,7 @@ Rectangle{
             }
         }
 
-        //режим
+        //Информация о режиме
         Rectangle {
             width: headHeight + smallWidth*2 + bigWidth
             height: headHeight - 20
@@ -187,7 +203,7 @@ Rectangle{
                 anchors.leftMargin: margin + parent.width/3*2
             }
         }
-        //БАСИ
+        //Информация о БАСИ
         Rectangle {
             width: headHeight + smallWidth*2 + bigWidth
             height: headHeight - 20
@@ -211,7 +227,7 @@ Rectangle{
             }
 
         }
-        //БАПД
+        //Информация о БАПД
         Rectangle {
             width: headHeight + smallWidth*2 + bigWidth
             height: headHeight - 20
@@ -235,7 +251,7 @@ Rectangle{
             }
 
         }
-        //БАСИ
+        //Информация о структуре информации
         Rectangle {
             width: headHeight + smallWidth*2 + bigWidth
             height: headHeight - 20
@@ -259,7 +275,7 @@ Rectangle{
             }
 
         }
-        //БАСИ
+        //Инфомация о маркере недостоверности
         Rectangle {
             width: headHeight + smallWidth*2 + bigWidth
             height: headHeight - 20
@@ -284,9 +300,8 @@ Rectangle{
 
         }
 
-
-
     }
+    //тень объекта
     DropShadow {
         anchors.fill: table_info
         horizontalOffset: Param.horizOffset

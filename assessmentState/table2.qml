@@ -4,10 +4,17 @@ import Qt.labs.qmlmodels 1.0
 import Param 1.0
 import QtGraphicalEffects 1.12
 
-
+// Объект: Таблица 2
+// Название: table2
+// Переменные:
+// title - заголовок формы объекта;
+// tableCell - информация о компоненте БА;
+// statePar - состояние ;
+// close - сигнал закрытия формы объекта.
 Rectangle{
     id: main_rec
 
+    // объявление перменных
     property int smallWidth: Param.tableSmallWidth
     property int bigWidth: Param.tableBigWidth
     property int headHeight: Param.tableHeadHeight
@@ -32,6 +39,7 @@ Rectangle{
         height: Param.tableHeight
         visible: true
         radius: Param.elemRadius
+        //заголовок
         Rectangle {
             id:title
             width: headHeight + smallWidth*2
@@ -55,6 +63,7 @@ Rectangle{
             }
         }
 
+        //кнопка для отоброжения только ошибок
         Rectangle {
             id:onlyError
             width: Param.tableButtonWidth/2
@@ -67,7 +76,7 @@ Rectangle{
             radius: Param.elemRadius
             border.color: borderColor
             border.width: Param.sizeFrame
-visible:statePar=="ok"?false:true
+            visible:statePar=="ok"?false:true
             Text {
                 text: "ошибки"
                 font.family: Param.textFontFamily
@@ -85,7 +94,7 @@ visible:statePar=="ok"?false:true
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -93,7 +102,7 @@ visible:statePar=="ok"?false:true
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -103,27 +112,29 @@ visible:statePar=="ok"?false:true
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+                //событие при клике
                 onClicked: {
                     all_ma.active = false
                     active = true
-                                        let errorComp = [];
-                                        for(let i = 0; i < tableCell.length; i++){
-                                            if(tableCell[i].par2!=tableCell[i].par3){
-                                                errorComp.push(tableCell[i])
-                                            }
+                    let errorComp = [];
+                    for(let i = 0; i < tableCell.length; i++){
+                        if(tableCell[i].par2!=tableCell[i].par3){
+                            errorComp.push(tableCell[i])
+                        }
 
-                                        }
-                                        listModel.clear()
-                                        listModel.append(errorComp)
-                                        onlyError.border.color = Param.accentСolor1
-                                        all.border.color = borderColor
+                    }
+                    listModel.clear()
+                    listModel.append(errorComp)
+                    onlyError.border.color = Param.accentСolor1
+                    all.border.color = borderColor
                 }
             }
         }
 
+        //кнопка для отоброжения всех данных
         Rectangle {
             id:all
             width: Param.tableButtonWidth/2
@@ -136,7 +147,7 @@ visible:statePar=="ok"?false:true
             radius: Param.elemRadius
             border.color: Param.accentСolor1
             border.width: Param.sizeFrame
-visible:statePar=="ok"?false:true
+            visible:statePar=="ok"?false:true
             Text {
                 text: "все"
                 font.family: Param.textFontFamily
@@ -150,11 +161,11 @@ visible:statePar=="ok"?false:true
             //отобразить только с ошибками
             MouseArea {
                 id: all_ma
-                 property bool active: false
+                property bool active: false
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -162,7 +173,7 @@ visible:statePar=="ok"?false:true
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -172,20 +183,22 @@ visible:statePar=="ok"?false:true
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+                //событие при клике
                 onClicked: {
                     err_ma.active = false
                     active = true
-                                        listModel.clear()
-                                        listModel.append(tableCell)
-                                        all.border.color = Param.accentСolor1
-                                        onlyError.border.color = borderColor
+                    listModel.clear()
+                    listModel.append(tableCell)
+                    all.border.color = Param.accentСolor1
+                    onlyError.border.color = borderColor
                 }
             }
         }
 
+        // кнопка закрытия формы объекта
         Rectangle {
             id:cross
             width: headHeight
@@ -204,13 +217,14 @@ visible:statePar=="ok"?false:true
             //закрыть окно
             MouseArea {
                 anchors.fill: parent
+                //событие при клике
                 onClicked: {
                     main_rec.close()
                 }
             }
         }
 
-
+        //Таблица
         Rectangle {
             anchors.top: parent.top
             anchors.topMargin: headHeight
@@ -222,7 +236,6 @@ visible:statePar=="ok"?false:true
 
             ListModel {
                 id: listModel
-
             }
 
             Component {
@@ -235,7 +248,6 @@ visible:statePar=="ok"?false:true
                         color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                         width: headHeight
                         height: cellHeight
-                        //отсутпы
                         anchors.left: parent.left
                         anchors.leftMargin: 0
                         border.width: 1
@@ -297,16 +309,16 @@ visible:statePar=="ok"?false:true
                 model: listModel
                 delegate: listDelegate
             }
-
-                    }
-        }
-        DropShadow {
-            anchors.fill: table_info
-            horizontalOffset: Param.horizOffset
-            verticalOffset: Param.verticOffset
-            radius: Param.mainRadius
-            samples: Param.mainSamples
-            color: darkTheme?Param.dDropShadowColor:Param.lDropShadowColor
-            source: table_info
         }
     }
+    //тень объекта
+    DropShadow {
+        anchors.fill: table_info
+        horizontalOffset: Param.horizOffset
+        verticalOffset: Param.verticOffset
+        radius: Param.mainRadius
+        samples: Param.mainSamples
+        color: darkTheme?Param.dDropShadowColor:Param.lDropShadowColor
+        source: table_info
+    }
+}

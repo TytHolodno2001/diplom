@@ -4,9 +4,17 @@ import Qt.labs.qmlmodels 1.0
 import Param 1.0
 import QtGraphicalEffects 1.12
 
-
+// Объект: Таблица
+// Название: table
+// Переменные:
+// title - заголовок формы объекта;
+// tableCell - информация о компоненте БА;
+// statePar - состояние;
+// close - сигнал закрытия формы объекта.
 Rectangle{
     id: main_rec
+
+    // объявление перменных
     property int smallWidth: Param.tableSmallWidth
     property int bigWidth: Param.tableBigWidth
     property int headHeight: Param.tableHeadHeight
@@ -33,6 +41,7 @@ Rectangle{
         height: Param.tableHeight
         visible: true
         radius: Param.elemRadius
+        //заголовок
         Rectangle {
             id:title
             width: headHeight + smallWidth*2 + bigWidth
@@ -56,6 +65,7 @@ Rectangle{
             }
         }
 
+        //кнопка для отоброжения только ошибок
         Rectangle {
             id:onlyError
             width: Param.tableButtonWidth
@@ -86,7 +96,7 @@ Rectangle{
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -94,7 +104,7 @@ Rectangle{
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -104,9 +114,10 @@ Rectangle{
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+                //событие при клике
                 onClicked: {
                     all_ma.active = false
                     active = true
@@ -115,7 +126,6 @@ Rectangle{
                         if((tableCell[i].tnp!=tableCell[i].tnr)||(tableCell[i].tkp!=tableCell[i].tkr)){
                             errorComp.push(tableCell[i])
                         }
-
                     }
                     listModel.clear()
                     listModel.append(errorComp)
@@ -125,6 +135,7 @@ Rectangle{
             }
         }
 
+        //кнопка для отоброжения всех данных
         Rectangle {
             id:all
             width: Param.tableButtonWidth
@@ -137,7 +148,7 @@ Rectangle{
             radius: Param.elemRadius
             border.color: Param.accentСolor1
             border.width: Param.sizeFrame
-visible:statePar=="ok"?false:true
+            visible:statePar=="ok"?false:true
             Text {
                 text: "все"
                 font.family: Param.textFontFamily
@@ -151,11 +162,11 @@ visible:statePar=="ok"?false:true
             //отобразить только с ошибками
             MouseArea {
                 id: all_ma
-                 property bool active: false
+                property bool active: false
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -163,7 +174,7 @@ visible:statePar=="ok"?false:true
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -173,9 +184,10 @@ visible:statePar=="ok"?false:true
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+                //событие при клике
                 onClicked: {
                     err_ma.active = false
                     active = true
@@ -187,6 +199,7 @@ visible:statePar=="ok"?false:true
             }
         }
 
+        // кнопка закрытия формы объекта
         Rectangle {
             id:cross
             width: headHeight
@@ -205,6 +218,7 @@ visible:statePar=="ok"?false:true
             //закрыть окно
             MouseArea {
                 anchors.fill: parent
+                //событие при клике
                 onClicked: {
                     main_rec.close()
                 }
@@ -212,6 +226,7 @@ visible:statePar=="ok"?false:true
         }
 
 
+        // Отображение таблицы
         Rectangle {
             anchors.top: parent.top
             anchors.topMargin: headHeight
@@ -338,7 +353,6 @@ visible:statePar=="ok"?false:true
                             color: fontColor
                         }
                     }
-
                 }
             }
             ListView {
@@ -346,9 +360,9 @@ visible:statePar=="ok"?false:true
                 model: listModel
                 delegate: listDelegate
             }
-
         }
     }
+    //тень объекта
     DropShadow {
         anchors.fill: table_info
         horizontalOffset: Param.horizOffset

@@ -4,9 +4,16 @@ import Qt.labs.qmlmodels 1.0
 import Param 1.0
 import QtGraphicalEffects 1.12
 
-
+// Объект: Список
+// Название: list
+// Переменные:
+// title - заголовок формы объекта;
+// itemComp - информация о компоненте БА;
+// close - сигнал закрытия формы объекта.
 Rectangle{
     id: main_rec
+
+    // объявление перменных
     property int elemWidth: Param.listWidth
     property int elemHeight: Param.listHeight
     property int titleHeight: Param.listTitleHeight
@@ -24,9 +31,9 @@ Rectangle{
 
     signal close();
 
-        onItemCompChanged: {
-            listModel.append(itemComp)
-        }
+    onItemCompChanged: {
+        listModel.append(itemComp)
+    }
 
     Rectangle {
         id:content
@@ -34,6 +41,7 @@ Rectangle{
         height: elemHeight
         color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
         radius: Param.elemRadius
+        //заголовок
         Rectangle {
             id:table_info
             color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
@@ -49,7 +57,6 @@ Rectangle{
                 anchors.top: parent.top
                 radius: Param.elemRadius
                 color: parent.color
-
                 Text {
                     text: main_rec.title
                     font.family: Param.textFontFamily
@@ -63,6 +70,7 @@ Rectangle{
                 }
             }
 
+            // кнопка закрытия формы объекта
             Rectangle {
                 id:cross
                 width: titleHeight
@@ -81,6 +89,7 @@ Rectangle{
                 //закрыть окно
                 MouseArea {
                     anchors.fill: parent
+                    //событие при клике
                     onClicked: {
                         main_rec.close()
                     }
@@ -140,6 +149,7 @@ Rectangle{
             }
         }
     }
+    //тень объекта
     DropShadow {
         anchors.fill: content
         horizontalOffset: Param.horizOffset

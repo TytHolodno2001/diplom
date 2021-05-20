@@ -3,8 +3,15 @@ import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
 import Param 1.0
 
+// Объект: Окно об ошибке
+// Название: errorInfo
+// Переменные:
+// desc_error - описание ошибки;
+// title_error - заголовок формы объекта.
 Rectangle{
     id: info_rect
+
+    // объявление перменных
     property string desc_error
     property string title_error
     property int margin: Param.margin24
@@ -28,7 +35,6 @@ Rectangle{
             anchors.top: parent.top
             anchors.topMargin: margin
             color: parent.color
-
             Text {
                 text: info_rect.title_error
                 font.family: Param.textFontFamily
@@ -39,6 +45,7 @@ Rectangle{
             }
         }
 
+        // кнопка закрытия формы объекта
         Rectangle {
             id:cross
             width: elemHeight
@@ -59,9 +66,10 @@ Rectangle{
             //закрыть окно
             MouseArea {
                 anchors.fill: parent
+                //событие при клике
                 onClicked: {
                     info_rect.visible = false
-                    }
+                }
             }
         }
         Rectangle{
@@ -84,6 +92,7 @@ Rectangle{
     }
 
 
+    //тень объекта
     DropShadow {
         anchors.fill: info
         horizontalOffset: Param.horizOffset

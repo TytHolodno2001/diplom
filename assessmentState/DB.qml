@@ -4,9 +4,18 @@ import Qt.labs.qmlmodels 1.0
 import Param 1.0
 import QtGraphicalEffects 1.12
 
-
+// Объект: Отображение информации из БД
+// Название: DB
+// Переменные:
+// widthAll - ширина формы объекта;
+// heightAll - длина формы объекта;
+// title - заголовок формы объекта;
+// itemComp - информация о БА;
+// close - сигнал закрытия формы объекта.
 Rectangle{
     id: main_rec
+
+    // объявление перменных
     property int smallWidth: Param.tableSmallWidth
     property int bigWidth: Param.tableBigWidth
     property int headHeight: Param.tableHeadHeight
@@ -18,9 +27,8 @@ Rectangle{
     property color fontColor: darkTheme?Param.dtextColor1:Param.ltextColor1
     property color borderColor: darkTheme?Param.delemThirdColor:Param.lelemThirdColor
 
-
     property int widthAll
-     property int heightAll
+    property int heightAll
     property string title
     property var itemComp
     signal close();
@@ -36,7 +44,7 @@ Rectangle{
         visible: true
         radius: Param.elemRadius
 
-        //первая строка - заголовка
+        //заголовок
         Rectangle {
             id:title
             width: widthAll - Param.tableButtonWidth*2 - headHeight
@@ -60,6 +68,7 @@ Rectangle{
             }
         }
 
+        //кнопка для отоброжения только ошибок
         Rectangle {
             id:onlyError
             width: Param.tableButtonWidth
@@ -90,7 +99,7 @@ Rectangle{
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -98,7 +107,8 @@ Rectangle{
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -108,9 +118,10 @@ Rectangle{
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+                //событие при клике - отобразить только ошикби
                 onClicked: {
                     all_ma.active = false
                     active = true
@@ -119,7 +130,6 @@ Rectangle{
                         if((itemComp[i].error=="есть ошибки")||itemComp[i].error=="ошибки"){
                             errorComp.push(itemComp[i])
                         }
-
                     }
                     listModel.clear()
                     listModel.append(errorComp)
@@ -129,6 +139,7 @@ Rectangle{
             }
         }
 
+        //кнопка для отоброжения всех данных
         Rectangle {
             id:all
             width: Param.tableButtonWidth
@@ -152,14 +163,13 @@ Rectangle{
                 verticalAlignment: Text.AlignVCenter
             }
 
-            //отобразить только с ошибками
             MouseArea {
                 id: all_ma
-                 property bool active: false
+                property bool active: false
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -167,7 +177,7 @@ Rectangle{
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -177,9 +187,10 @@ Rectangle{
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+                //событие при клике - отобразить все данные
                 onClicked: {
                     err_ma.active = false
                     active = true
@@ -191,6 +202,7 @@ Rectangle{
             }
         }
 
+        // кнопка закрытия формы объекта
         Rectangle {
             id:cross
             width: headHeight
@@ -209,15 +221,14 @@ Rectangle{
             //закрыть окно
             MouseArea {
                 anchors.fill: parent
+                //событие при клике
                 onClicked: {
                     main_rec.close()
-
                 }
             }
         }
 
-        //номер изделия, дата и время
-                //сам список
+        //таблица с данными из БД
         Rectangle {
             id: listPar
             anchors.top: parent.top
@@ -268,11 +279,10 @@ Rectangle{
                         width: (parent.width - Param.tableHeadHeight)/3
                         color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                         border.color: borderColor
-                         border.width: Param.sizeFrame
+                        border.width: Param.sizeFrame
                         anchors.left: parent.left
                         anchors.leftMargin:  Param.tableHeadHeight
                         Text {
-                            //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                             text: date
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -289,11 +299,10 @@ Rectangle{
                         width: (parent.width - Param.tableHeadHeight)/3
                         color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                         border.color: borderColor
-                         border.width: Param.sizeFrame
+                        border.width: Param.sizeFrame
                         anchors.left: parent.left
                         anchors.leftMargin:  Param.tableCellHeight + (parent.width - Param.tableHeadHeight)/3
                         Text {
-                            //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                             text: time
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -309,11 +318,10 @@ Rectangle{
                         width: (parent.width - Param.tableHeadHeight)/3
                         color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                         border.color: borderColor
-                         border.width: Param.sizeFrame
+                        border.width: Param.sizeFrame
                         anchors.left: parent.left
                         anchors.leftMargin:  Param.tableCellHeight + (parent.width - Param.tableHeadHeight)/3*2
                         Text {
-                            //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                             text: error
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -336,6 +344,7 @@ Rectangle{
             }
         }
     }
+    //тень объекта
     DropShadow {
         anchors.fill: table_info
         horizontalOffset: Param.horizOffset

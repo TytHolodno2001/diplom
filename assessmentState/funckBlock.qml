@@ -3,12 +3,30 @@ import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
 import Param 1.0
 
+// Объект: Функциональный блок дял отображения информации и БА
+// Название: funckBlock
+// Переменные:
+// visStrelka - отображение стрелки;
+// itemText - заголовок формы объекта;
+// icon - иконка на форме объекта;
+// dragMinX - минимальная абсцисса для перемещения объекта по сцене;
+// dragMaxX - максимальная абсцисса для перемещения объекта по сцене;
+// dragMinY - минимальная ордината для перемещения объекта по сцене;
+// dragMaxY - максимальная ордината для перемещения объекта по сцене;
+// selectItemVis - есть ли второй режим;
+// itemComp - информация о компонентах БА для первого режима;
+// itemComp - информация о компонентах БА для второго режима;
+// itemCompText - надпись для первого режима;
+// itemComp1Text - надпись для второго режима;
+// positionChange(double x, double y, string itemText) - сигнал при смене координат объекта;
+// menuClose - сигнал при закрытии меню.
 Rectangle{
     id: dragRect
     width: Param.fBWidth
     height: Param.fBHeight
     radius: Param.elemRadius
 
+    // объявление перменных
     property color item: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
     property color back: darkTheme?Param.delemFirstColor:Param.lelemFirstColor
     property color menu: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
@@ -54,6 +72,7 @@ Rectangle{
 
     z:3
     Drag.active:dragArea.drag.active
+    //область передвижения объекта
     MouseArea {
         id: dragArea
         z:4
@@ -71,6 +90,7 @@ Rectangle{
             positionChange(dragRect.x, dragRect.y, dragRect.itemText)
         }
     }
+    //ФБ
     Rectangle {
         id: menu
         width: dragRect.menuWidth
@@ -84,7 +104,7 @@ Rectangle{
             anchors.fill: parent
             hoverEnabled : true
 
-            // при наведении
+            //событие при наведении и после
             onEntered:{
                 parent.border.width = Param.sizeFrame
                 parent.border.color = Param.accentСolor3
@@ -93,7 +113,7 @@ Rectangle{
                 parent.border.width = 0
             }
 
-            //при клике
+            //событие при клике и после
             onPressed:
             {
                 parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -125,6 +145,7 @@ Rectangle{
             anchors.leftMargin: dragRect.menuHeight - 40
         }
 
+        //иконка
         Rectangle {
             property bool vis
             color: parent.color
@@ -142,6 +163,7 @@ Rectangle{
             }
         }
 
+        //стрелочка
         Rectangle {
             id: strelka
             property bool vis
@@ -153,7 +175,6 @@ Rectangle{
             anchors.right: parent.right
             anchors.rightMargin: 2
             visible: visStrelka
-
             Image {
                 id: arrow_img
                 anchors.verticalCenter: parent.verticalCenter
@@ -173,12 +194,12 @@ Rectangle{
                 onTriggered: {itemMenu.visible = false
                 }
             }
-
             MouseArea {
                 id: strelka_area
                 property bool openDown
                 property bool openFirst: true
                 anchors.fill: parent
+                //событие при клике
                 onClicked: {
                     if (openFirst) {
                         listItem.append(itemComp)
@@ -222,6 +243,7 @@ Rectangle{
                     }
 
                 }
+                //событие при клике и после
                 onPressed: strelka.color  = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
                 onReleased:{
                     themeChange.connect(function(){
@@ -232,6 +254,7 @@ Rectangle{
             }
         }
     }
+    //тень объекта
     DropShadow {
         anchors.fill: menu
         horizontalOffset: Param.horizOffset
@@ -242,7 +265,7 @@ Rectangle{
         source: menu
     }
 
-
+    //список компонентов
     Rectangle {
         id:itemMenu
         y: dragRect.menuHeight
@@ -252,7 +275,7 @@ Rectangle{
         color: dragRect.back
         radius: dragRect.menuRadius
         visible: false
-        //меню переключателя
+        //меню переключения режимов
         Rectangle {
             id: item1
             width:dragRect.itemWidth
@@ -271,7 +294,7 @@ Rectangle{
             PropertyAnimation { id: animation_left_block_close; target: left_block; property: "width"; to: Param.fBSelectSmallWidth; duration: 200 }
             PropertyAnimation { id: animation_right_block_open; target: right_block; property: "width"; to: Param.fBSelectBigWidth; duration: 200 }
             PropertyAnimation { id: animation_right_block_close; target: right_block; property: "width"; to: Param.fBSelectSmallWidth; duration: 200 }
-
+            //область кнопки правого режима
             Rectangle {
                 id: left_block
                 y: 0
@@ -294,9 +317,10 @@ Rectangle{
 
                 MouseArea {
                     anchors.fill: parent
+                    //событие при клике
                     onClicked: {
                         if(item1.left_block_vis) {
-                            //                            закрытие левого блока
+                            //закрытие левого блока
                             listItem.clear()
                             listItem.append(itemComp1)
                             menuClose()
@@ -309,7 +333,7 @@ Rectangle{
                             item1.left_block_vis = false
                         }
                         else {
-                            //                            закрытие правого блока
+                            //закрытие правого блока
                             listItem.clear()
                             listItem.append(itemComp)
                             menuClose()
@@ -324,7 +348,7 @@ Rectangle{
                     }
                     hoverEnabled : true
 
-                    // при наведении
+                    //событие при наведении и после
                     onEntered:{
                         parent.border.width = Param.sizeFrame
                         parent.border.color = Param.accentСolor3
@@ -333,7 +357,7 @@ Rectangle{
                         parent.border.width = 0
                     }
 
-                    //при клике
+                    //событие при клике и после
                     onPressed:
                     {
                         parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -346,10 +370,9 @@ Rectangle{
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                         parent.border.width = 0
                     }
-
                 }
-
             }
+            //область кнопки правого режима
             Rectangle {
                 id:right_block
                 y: 0
@@ -372,13 +395,13 @@ Rectangle{
 
                 MouseArea {
                     anchors.fill: parent
+                    //событие при клике
                     onClicked: {
                         if(item1.left_block_vis) {
                             //закрытие левого блока
                             listItem.clear()
                             listItem.append(itemComp1)
                             menuClose()
-
                             itemMenu.height = selectItemVis? (dragRect.itemHeight + dragRect.itemMargin)* (listItem.count + 1) + dragRect.itemMargin : (dragRect.itemHeight + dragRect.itemMargin)* (listItem.count) + dragRect.itemMargin
                             if(!strelka_area.openDown){
                                 itemMenu.y = -itemMenu.height
@@ -402,8 +425,7 @@ Rectangle{
                         }
                     }
                     hoverEnabled : true
-
-                    // при наведении
+                    //событие при наведении и после
                     onEntered:{
                         parent.border.width = Param.sizeFrame
                         parent.border.color = Param.accentСolor3
@@ -411,8 +433,7 @@ Rectangle{
                     onExited:{
                         parent.border.width = 0
                     }
-
-                    //при клике
+                    //событие при клике и после
                     onPressed:
                     {
                         parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -427,6 +448,7 @@ Rectangle{
                     }
                 }
             }
+            //тень объекта
             DropShadow {
                 anchors.fill: left_block
                 horizontalOffset: Param.horizOffset
@@ -436,6 +458,7 @@ Rectangle{
                 color: darkTheme?Param.dDropShadowColor:Param.lDropShadowColor
                 source: left_block
             }
+            //тень объекта
             DropShadow {
                 anchors.fill: right_block
                 horizontalOffset: Param.horizOffset
@@ -447,6 +470,8 @@ Rectangle{
             }
 
         }
+
+        //список компонентов
         Rectangle{
             z:0
             anchors.top: parent.top
@@ -502,8 +527,6 @@ Rectangle{
                             height: dragRect.itemHeight - 4
                             color: parent.color
                             radius: dragRect.menuRadius
-
-
                         }
 
                         MouseArea {
@@ -512,7 +535,7 @@ Rectangle{
                             anchors.fill: parent
                             hoverEnabled : true
 
-                            // при наведении
+                            //событие при наведении и после
                             onEntered:{
                                 parent.border.width = Param.sizeFrame
                                 parent.border.color = Param.accentСolor3
@@ -522,7 +545,7 @@ Rectangle{
                                 parent.border.color = statePar == "ok"?Param.accentСolor1:Param.accentСolor2
                             }
 
-                            //при клике
+                            //событие при клике и после
                             onPressed:
                             {
                                 parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -537,6 +560,7 @@ Rectangle{
 
                             }
 
+                            //событие при клике - открытие информации о компоненте в зависимости от ее типа
                             onClicked:{
                                 // ТУТ JSON
                                 if(!create) {
@@ -606,10 +630,10 @@ Rectangle{
                                     else if(type == "table2"){
 
                                         let component = Qt.createComponent("table2.qml");
-                                         console.log(component.status)
+                                        console.log(component.status)
                                         if (component.status === Component.Ready) {
                                             let childRec = component.createObject(dragRect)
-childRec.statePar = statePar
+                                            childRec.statePar = statePar
                                             let rows = []
                                             for (let i = 0; i < infoPar.count; i++){
                                                 let elem = infoPar.get(i)
@@ -715,7 +739,6 @@ childRec.statePar = statePar
 
                                             }
 
-
                                             create = true
 
                                             menuClose.connect(function(){
@@ -744,7 +767,6 @@ childRec.statePar = statePar
                                             childRec.itemComp = items
                                             childRec.title = name
                                             //открывается справа или слева
-                                            //открывается справа или слева
                                             if(dragRect.x > scene.width - (dragRect.itemMargin + Param.fBWidth) - /*ширина элемента*/Param.itemsWidth)
                                                 //слева
                                             {
@@ -757,7 +779,6 @@ childRec.statePar = statePar
                                             }
 
                                             //открывается напротив пункта или выше
-
                                             //список открывается вниз
                                             if(strelka_area.openDown){
                                                 if(dragRect.y + selectHeight + Param.fBHeight + dragRect.itemHeight*(number -1) + dragRect.itemMargin * (number) + /*высота элемента*/ Param.itemsHeight > scene.height) {
@@ -799,7 +820,7 @@ childRec.statePar = statePar
                                         if (component.status === Component.Ready) {
                                             let childRec = component.createObject(dragRect)
 
-childRec.statePar = statePar
+                                            childRec.statePar = statePar
                                             let rows = []
                                             for (let i = 0; i < infoPar.count; i++){
                                                 let elem = infoPar.get(i)
@@ -810,7 +831,6 @@ childRec.statePar = statePar
 
                                             childRec.title = name
 
-                                            //открывается справа или слева
                                             //открывается справа или слева
                                             if(dragRect.x > scene.width - (dragRect.itemMargin + Param.fBWidth) - /*ширина элемента*/Param.tableMediumWidth)
                                                 //слева
@@ -865,7 +885,7 @@ childRec.statePar = statePar
                                         let component = Qt.createComponent("expressHelpBAPD.qml");
                                         if (component.status === Component.Ready) {
                                             var child= component.createObject(dragRect);
-childRec.statePar = statePar
+                                            childRec.statePar = statePar
                                             let tableInfo = []
                                             for (let i = 0; i < infoPar.count; i++){
                                                 let elem = infoPar.get(i)
@@ -995,6 +1015,7 @@ childRec.statePar = statePar
                         }
                     }
 
+                    //тень объекта
                     DropShadow {
                         anchors.fill: itemOfMenu
                         horizontalOffset: Param.horizOffset
@@ -1018,6 +1039,7 @@ childRec.statePar = statePar
             }
         }
     }
+    //тень объекта
     DropShadow {
         anchors.fill: itemMenu
         horizontalOffset: Param.horizOffset

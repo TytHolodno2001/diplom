@@ -4,9 +4,19 @@ import Qt.labs.qmlmodels 1.0
 import Param 1.0
 import QtGraphicalEffects 1.12
 
-
+// Объект: экспресс-анализ по БАПД
+// Название: expressHelp
+// Переменные:
+// title - заголовок формы объекта;
+// numberProduct - номер БА;
+// dateProduct - дата эксплуатации БА;
+// timeProduct - время эксплуатации БА;
+// itemComp - информация о компонентах БА;
+// close - сигнал закрытия формы объекта.
 Rectangle{
     id: main_rec
+
+    // объявление перменных
     property int smallWidth: Param.tableSmallWidth
     property int bigWidth: Param.tableBigWidth
     property int headHeight: Param.tableHeadHeight
@@ -22,9 +32,7 @@ Rectangle{
     property string numberProduct
     property string dateProduct
     property string timeProduct
-    property var itemComp/*: [{mode: "Режим", bstp: "000000*", betp: "000000", bstr: "000000", betr: "000000*", info: "пока хз"},
-        {mode: "Режим", bstp: "000000", betp: "000000", bstr: "000000", betr: "000000", info: "пока хз"},
-        {mode: "Режим", bstp: "000000", betp: "000000", bstr: "000000", betr: "000000", info: "пока хз"}]*/
+    property var itemComp
     signal close();
     onItemCompChanged: {
         listModel.append(itemComp)
@@ -38,7 +46,7 @@ Rectangle{
         visible: true
         radius: Param.elemRadius
 
-        //первая строка - заголовка
+        //заголовок
         Rectangle {
             id:title
             width: headHeight + smallWidth*2 + bigWidth
@@ -62,6 +70,7 @@ Rectangle{
             }
         }
 
+        //кнопка для отоброжения только ошибок
         Rectangle {
             id:onlyError
             width: Param.tableButtonWidth
@@ -74,7 +83,7 @@ Rectangle{
             radius: Param.elemRadius
             border.color: borderColor
             border.width: Param.sizeFrame
-visible:statePar=="ok"?false:true
+            visible:statePar=="ok"?false:true
             Text {
                 text: "ошибки"
                 font.family: Param.textFontFamily
@@ -92,7 +101,7 @@ visible:statePar=="ok"?false:true
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -100,7 +109,7 @@ visible:statePar=="ok"?false:true
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -110,27 +119,28 @@ visible:statePar=="ok"?false:true
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+                //событие при клике - отобразить только с ошибками
                 onClicked: {
                     all_ma.active = false
                     active = true
-                                        let errorComp = [];
-                                        for(let i = 0; i < itemComp.length; i++){
-                                            if(itemComp[i].statePar=="bad"){
-                                                errorComp.push(itemComp[i])
-                                            }
-
-                                        }
-                                        listModel.clear()
-                                        listModel.append(errorComp)
-                                        onlyError.border.color = Param.accentСolor1
-                                        all.border.color = borderColor
+                    let errorComp = [];
+                    for(let i = 0; i < itemComp.length; i++){
+                        if(itemComp[i].statePar=="bad"){
+                            errorComp.push(itemComp[i])
+                        }
+                    }
+                    listModel.clear()
+                    listModel.append(errorComp)
+                    onlyError.border.color = Param.accentСolor1
+                    all.border.color = borderColor
                 }
             }
         }
 
+        //кнопка для отоброжения всех данных
         Rectangle {
             id:all
             width: Param.tableButtonWidth
@@ -143,7 +153,7 @@ visible:statePar=="ok"?false:true
             radius: Param.elemRadius
             border.color: Param.accentСolor1
             border.width: Param.sizeFrame
-visible:statePar=="ok"?false:true
+            visible:statePar=="ok"?false:true
             Text {
                 text: "все"
                 font.family: Param.textFontFamily
@@ -157,11 +167,11 @@ visible:statePar=="ok"?false:true
             //отобразить только с ошибками
             MouseArea {
                 id: all_ma
-                 property bool active: false
+                property bool active: false
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -169,7 +179,7 @@ visible:statePar=="ok"?false:true
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -179,20 +189,23 @@ visible:statePar=="ok"?false:true
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+
+                //событие при клике - отобразить все данные
                 onClicked: {
                     err_ma.active = false
                     active = true
-                                        listModel.clear()
-                                        listModel.append(itemComp)
-                                        all.border.color = Param.accentСolor1
-                                        onlyError.border.color = borderColor
+                    listModel.clear()
+                    listModel.append(itemComp)
+                    all.border.color = Param.accentСolor1
+                    onlyError.border.color = borderColor
                 }
             }
         }
 
+        // кнопка закрытия формы объекта
         Rectangle {
             id:cross
             width: headHeight
@@ -211,14 +224,14 @@ visible:statePar=="ok"?false:true
             //закрыть окно
             MouseArea {
                 anchors.fill: parent
+                //событие при клике
                 onClicked: {
                     main_rec.close()
-
                 }
             }
         }
 
-        //номер изделия, дата и время
+        //Информация о номере изделия, дате и времени
         Rectangle {
             id:numberProduct
             width: headHeight + smallWidth*2 + bigWidth
@@ -267,7 +280,7 @@ visible:statePar=="ok"?false:true
             }
         }
 
-        //сам список
+        //Таблица с данными
         Rectangle {
             id: listPar
             anchors.top: parent.top
@@ -282,7 +295,6 @@ visible:statePar=="ok"?false:true
 
             ListModel {
                 id: listModel
-
             }
 
             Component {
@@ -312,8 +324,8 @@ visible:statePar=="ok"?false:true
                         anchors.fill: parent
                         hoverEnabled : true
 
+                        //событие при клике - отоброжение данных в зависимоти от их типа
                         onClicked: {
-
                             if(!create) {
                                 if(statePar=="bad"){
                                     if(type == "table"){
@@ -328,7 +340,6 @@ visible:statePar=="ok"?false:true
                                             childRec.tableCell = rows
 
                                             childRec.title = name
-                                            //открывается справа или слева
                                             childRec.x =0
                                             childRec.y = headHeight*2
 
@@ -359,7 +370,6 @@ visible:statePar=="ok"?false:true
                                             childRec.tableCell = rows
 
                                             childRec.title = name
-                                            //открывается справа или слева
                                             childRec.x =0
                                             childRec.y = headHeight*2
 
@@ -388,7 +398,6 @@ visible:statePar=="ok"?false:true
                                             }
                                             childRec.itemComp = items
                                             childRec.title = name
-                                            //открывается справа или слева
                                             childRec.x =0
                                             childRec.y = headHeight*2
 
@@ -420,7 +429,6 @@ visible:statePar=="ok"?false:true
 
                                             childRec.itemComp = items
                                             childRec.title = name
-                                            //открывается справа или слева
                                             childRec.x =0
                                             childRec.y = headHeight*2
 
@@ -452,8 +460,6 @@ visible:statePar=="ok"?false:true
                                             childRec.itemComp = rows
 
                                             childRec.title = name
-
-                                            //открывается справа или слева
                                             childRec.x =0
                                             childRec.y = headHeight*2
 
@@ -482,11 +488,9 @@ visible:statePar=="ok"?false:true
                 model: listModel
                 delegate: listDelegate
             }
-
         }
-
-
     }
+    //тень объекта
     DropShadow {
         anchors.fill: table_info
         horizontalOffset: Param.horizOffset

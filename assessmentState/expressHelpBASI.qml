@@ -4,9 +4,19 @@ import Qt.labs.qmlmodels 1.0
 import Param 1.0
 import QtGraphicalEffects 1.12
 
-
+// Объект: Экспресс анализ БАСИ
+// Название: expressHelpBASI
+// Переменные:
+// title - заголовок объекта;
+// numberProduct - номер БА;
+// dateProduct - дата эксплуатации БА;
+// timeProduct - время эксплуатации БА;
+// itemComp - информация о компонентах БА;
+// close - сигнал закрытия формы объекта.
 Rectangle{
     id: main_rec
+
+    // объявление перменных
     property int smallWidth: Param.tableSmallWidth
     property int bigWidth: Param.tableBigWidth
     property int headHeight: Param.tableHeadHeight
@@ -28,6 +38,7 @@ Rectangle{
         listModel.append(itemComp)
     }
 
+    // заголовок
     Rectangle {
         id:table_info
         color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
@@ -36,7 +47,7 @@ Rectangle{
         visible: true
         radius: Param.elemRadius
 
-        //первая строка - заголовка
+        //заголовок
         Rectangle {
             id:title
             width: headHeight + smallWidth*2 + bigWidth
@@ -60,6 +71,7 @@ Rectangle{
             }
         }
 
+        //кнопка для отоброжения только ошибок
         Rectangle {
             id:onlyError
             width: Param.tableButtonWidth
@@ -72,7 +84,7 @@ Rectangle{
             radius: Param.elemRadius
             border.color: borderColor
             border.width: Param.sizeFrame
-visible:statePar=="ok"?false:true
+            visible:statePar=="ok"?false:true
             Text {
                 text: "ошибки"
                 font.family: Param.textFontFamily
@@ -90,7 +102,7 @@ visible:statePar=="ok"?false:true
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -98,7 +110,7 @@ visible:statePar=="ok"?false:true
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -108,9 +120,11 @@ visible:statePar=="ok"?false:true
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+
+                //событие при клике
                 onClicked: {
                     all_ma.active = false
                     active = true
@@ -119,7 +133,6 @@ visible:statePar=="ok"?false:true
                         if((itemComp[i].betp!=itemComp[i].betr)||(itemComp[i].bstp!=itemComp[i].bstr)){
                             errorComp.push(itemComp[i])
                         }
-
                     }
                     listModel.clear()
                     listModel.append(errorComp)
@@ -129,6 +142,7 @@ visible:statePar=="ok"?false:true
             }
         }
 
+        //кнопка для отоброжения всех данных
         Rectangle {
             id:all
             width: Param.tableButtonWidth
@@ -141,7 +155,7 @@ visible:statePar=="ok"?false:true
             radius: Param.elemRadius
             border.color: Param.accentСolor1
             border.width:Param.sizeFrame
-visible:statePar=="ok"?false:true
+            visible:statePar=="ok"?false:true
             Text {
                 text: "все"
                 font.family: Param.textFontFamily
@@ -155,11 +169,11 @@ visible:statePar=="ok"?false:true
             //отобразить только с ошибками
             MouseArea {
                 id: all_ma
-                 property bool active: false
+                property bool active: false
                 anchors.fill: parent
                 hoverEnabled : true
 
-                // при наведении
+                //событие при наведении и после
                 onEntered:{
                     parent.border.color = Param.accentСolor3
                 }
@@ -167,7 +181,7 @@ visible:statePar=="ok"?false:true
                     parent.border.color = active?Param.accentСolor1:borderColor
                 }
 
-                //при клике
+                //событие при клике и после
                 onPressed:
                 {
                     parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -177,9 +191,10 @@ visible:statePar=="ok"?false:true
                         parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                     })
                     parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
-                   parent.border.color = active?Param.accentСolor1:borderColor
+                    parent.border.color = active?Param.accentСolor1:borderColor
 
                 }
+                //событие при клике
                 onClicked: {
                     err_ma.active = false
                     active = true
@@ -191,6 +206,7 @@ visible:statePar=="ok"?false:true
             }
         }
 
+        // кнопка закрытия формы объекта
         Rectangle {
             id:cross
             width: headHeight
@@ -209,14 +225,14 @@ visible:statePar=="ok"?false:true
             //закрыть окно
             MouseArea {
                 anchors.fill: parent
+                //событие при клике
                 onClicked: {
                     main_rec.close()
-
                 }
             }
         }
 
-        //номер изделия, дата и время
+        //Информация о номере изделия, дате и времени
         Rectangle {
             id:numberProduct
             width: headHeight + smallWidth*2 + bigWidth
@@ -266,8 +282,8 @@ visible:statePar=="ok"?false:true
         }
 
 
-        //таблица
-        //заголовок
+        //Информация в таблице
+        //заголовок таблицы
         Rectangle {
             id: table
             height: Param.tableButtonHeight
@@ -295,7 +311,6 @@ visible:statePar=="ok"?false:true
                 anchors.left: parent.left
                 anchors.leftMargin: parent.width / 5
                 Text {
-                    //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                     text: "Планировачные данные"
                     font.family: Param.textFontFamily
                     anchors.fill: parent
@@ -316,7 +331,6 @@ visible:statePar=="ok"?false:true
                 anchors.left: parent.left
                 anchors.leftMargin: parent.width / 5 *3
                 Text {
-                    //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                     text: "Реальные данные"
                     font.family: Param.textFontFamily
                     anchors.fill: parent
@@ -347,7 +361,6 @@ visible:statePar=="ok"?false:true
                 anchors.left: parent.left
                 anchors.leftMargin: 0
                 Text {
-                    //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                     text: "Режим"
                     font.family: Param.textFontFamily
                     anchors.fill: parent
@@ -369,7 +382,6 @@ visible:statePar=="ok"?false:true
                 anchors.left: parent.left
                 anchors.leftMargin: parent.width / 5
                 Text {
-                    //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                     text: "БВн"
                     font.family: Param.textFontFamily
                     anchors.fill: parent
@@ -386,11 +398,10 @@ visible:statePar=="ok"?false:true
                 width: parent.width / 5
                 color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                 border.color: borderColor
-                 border.width: Param.sizeFrame
+                border.width: Param.sizeFrame
                 anchors.left: parent.left
                 anchors.leftMargin: parent.width / 5 *2
                 Text {
-                    //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                     text: "БВк"
                     font.family: Param.textFontFamily
                     anchors.fill: parent
@@ -407,11 +418,10 @@ visible:statePar=="ok"?false:true
                 width: parent.width / 5
                 color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                 border.color: borderColor
-                 border.width: Param.sizeFrame
+                border.width: Param.sizeFrame
                 anchors.left: parent.left
                 anchors.leftMargin: parent.width / 5 *3
                 Text {
-                    //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                     text: "БВн"
                     font.family: Param.textFontFamily
                     anchors.fill: parent
@@ -428,11 +438,10 @@ visible:statePar=="ok"?false:true
                 width: parent.width / 5
                 color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                 border.color: borderColor
-                 border.width: Param.sizeFrame
+                border.width: Param.sizeFrame
                 anchors.left: parent.left
                 anchors.leftMargin: parent.width / 5 *4
                 Text {
-                    //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                     text: "БВк"
                     font.family: Param.textFontFamily
                     anchors.fill: parent
@@ -446,7 +455,7 @@ visible:statePar=="ok"?false:true
             }
         }
 
-        //сам список
+        //Информация в таблице
         Rectangle {
             id: listPar
             anchors.top: parent.top
@@ -476,11 +485,10 @@ visible:statePar=="ok"?false:true
                         width: parent.width / 5
                         color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                         border.color: borderColor
-                         border.width: Param.sizeFrame
+                        border.width: Param.sizeFrame
                         anchors.left: parent.left
                         anchors.leftMargin: 0
                         Text {
-                            //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                             text: mode
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -495,7 +503,8 @@ visible:statePar=="ok"?false:true
                             property bool create: false
                             anchors.fill: parent
                             hoverEnabled : true
-                            // при наведении
+
+                            //событие при наведении и после
                             onEntered:{
 
                                 parent.border.color = Param.accentСolor3
@@ -505,7 +514,7 @@ visible:statePar=="ok"?false:true
                                 parent.border.color= darkTheme?Param.delemThirdColor:Param.lelemThirdColor
                             }
 
-                            //при клике
+                            //событие при клике и после
                             onPressed:
                             {
                                 parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -520,12 +529,12 @@ visible:statePar=="ok"?false:true
 
                                 border.color= darkTheme?Param.delemThirdColor:Param.lelemThirdColor
                             }
+                            //событие при клике
                             onClicked: {
                                 if(!create){
                                     let component = Qt.createComponent("expressHelp.qml");
                                     if (component.status === Component.Ready) {
                                         var child= component.createObject(main_rec);
-                                        //открывается справа или слева
                                         child.x = 0
                                         child.y = headHeight*2 - 10 + Param.tableButtonHeight*2
                                         create = true
@@ -535,7 +544,6 @@ visible:statePar=="ok"?false:true
                                         child.numberProduct = main_rec.numberProduct
                                         child.dateProduct = main_rec.dateProduct
                                         child.timeProduct = main_rec.timeProduct
-
 
                                         for (let i = 0; i < info.count; i++){
                                             let elem = info.get(i)
@@ -558,11 +566,10 @@ visible:statePar=="ok"?false:true
                         width: parent.width / 5
                         color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
                         border.color: borderColor
-                         border.width: Param.sizeFrame
+                        border.width: Param.sizeFrame
                         anchors.left: parent.left
                         anchors.leftMargin: parent.width / 5
                         Text {
-                            //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                             text: bstp
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -583,7 +590,6 @@ visible:statePar=="ok"?false:true
                         anchors.left: parent.left
                         anchors.leftMargin: parent.width / 5 *2
                         Text {
-                            //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                             text: betp
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -604,7 +610,6 @@ visible:statePar=="ok"?false:true
                         anchors.left: parent.left
                         anchors.leftMargin: parent.width / 5 *3
                         Text {
-                            //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                             text: bstr
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -625,7 +630,6 @@ visible:statePar=="ok"?false:true
                         anchors.left: parent.left
                         anchors.leftMargin: parent.width / 5 *4
                         Text {
-                            //mode: "Режим", bstp: 000000, betp: 000000, bstr: 000000, betr: 000000
                             text: betr
                             font.family: Param.textFontFamily
                             anchors.fill: parent
@@ -637,7 +641,6 @@ visible:statePar=="ok"?false:true
                             anchors.leftMargin: margin
                         }
                     }
-
                 }
             }
 
@@ -648,6 +651,7 @@ visible:statePar=="ok"?false:true
             }
         }
     }
+    //тень объекта
     DropShadow {
         anchors.fill: table_info
         horizontalOffset: Param.horizOffset

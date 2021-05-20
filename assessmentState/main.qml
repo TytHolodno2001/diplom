@@ -1,8 +1,29 @@
+//Выпускная квалификационная работа
+//По теме: "Разработка интерфейса взаимодействия пользователя в части отображения результатов оценки работоспособности бортовой аппаратуры"
+//Языки: С++, QML, JavaScript
+//Среда разработки: Qt Creator
+//Дата: 15.05.2021
+//Версия: 1.0
+//Разработчик: Крылова Елизавета Сергеевна
+
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
 import Param 1.0
+
+// Главное окно приложения
+// Переменные используемые в форме:
+// darkTheme - темная ли тема;
+// Функции используемые в форме:
+// onPositionChange - перемещения связи за функциональным блоком;
+// createFunckBlock - создания функионального блока;
+// find - поиск в массиве;
+// visConnectNO - скрытие связи;
+// visConnect - отображения связи;
+// readTextFile - чтение файла;
+// createItemComp - создание компонентов для функционального блока;
+// themeChange() - сигнал для смены темы.
 
 Window {
     id: mainWindow
@@ -12,12 +33,17 @@ Window {
     color: darkTheme? Param.dbgColor:Param.lbgColor
     minimumHeight: Param.margin80*3 + Param.margin48*3 + menu.height + menu2.height + menu_DB.height
     minimumWidth: Param.margin80*2 + Param.margin48*4 + Param.fBWidth + menu.width + Param.tableWidth + Param.itemsWidth
+
     property bool darkTheme: true
+    signal themeChange()
 
-
-    // Перемещение связи за квадратом
+    // onPositionChange() - функция для перемещения связи за функциональным блоком
+    // Формальные параметры:
+    // x - абсцисса;
+    // y - ордината;
+    // itemText - название функционального блока;
     function onPositionChange(x,y,itemText){
-
+        //проход по всем связям и перемещение их
         for(let i = 0; i < connectFunckBlock.count; i++){
             if(connectFunckBlock.get(i).firstNode.itemText  === itemText) {
                 let firstNode = connectFunckBlock.get(i).firstNode
@@ -32,14 +58,18 @@ Window {
                 let connect = connectFunckBlock.get(i).connect
                 connect.x2 = secondNode.x + secondNode.width/2
                 connect.y2 = secondNode.y + secondNode.height/2
-
             }
         }
     }
 
-    // функция для кнопок - в параметры передаются настраевымые значения
+    // createFunckBlock() - функция создания функионального блока
+    // Формальные параметры:
+    // name_eng - название ФБ на англиском;
+    // name_ru - название ФБ на русском;
+    // icon - путь до изображения;
+    // itemComp - компоненты ФБ;
     function createFunckBlock(name_eng, name_ru, icon, itemComp) {
-        //динамическое создание объекта
+        //создание ФБ
         let component = Qt.createComponent("funckBlock.qml");
         if (component.status === Component.Ready) {
             let childRec = component.createObject(scene);
@@ -52,6 +82,7 @@ Window {
             childRec.itemText = name_ru
             childRec.icon = icon
 
+            //проверка файла на ошибки
             if (itemComp === 0){
                 let componentError = Qt.createComponent("errorInfo.qml");
                 if (componentError.status === Component.Ready) {
@@ -77,6 +108,7 @@ Window {
                 childRec.visStrelka = false
             }
             else{
+                // если ошибок нету то передача данных для списка компонентов
                 if(itemComp.select == true){
                     childRec.itemComp = itemComp.item
                     childRec.itemComp1 = itemComp.item1
@@ -90,8 +122,10 @@ Window {
                 }
             }
 
+            //при смене положения
             childRec.positionChange.connect(onPositionChange)
 
+            //при смене размер сцены - поменять размеры возможного перемещения блока
             scene.widthChange.connect(function(){
                 childRec.dragMinX =  Param.margin48
                 childRec.dragMaxX =  scene.width -  Param.margin48 - childRec.width
@@ -103,8 +137,7 @@ Window {
 
             let coun = funckBlocks.count
 
-
-            //про связи
+            //проверка файла на ошибки
             let connects = JSON.parse(readTextFile("onboardEquipment.json"))
             if(connects == "") {
                 let componentError = Qt.createComponent("errorInfo.qml");
@@ -137,12 +170,13 @@ Window {
                 }
             }
             else {
+                // если ошибок нету - создание связей
                 for( var i = 0; i < coun; i++ ) {
                     for( var j = 0; j < connects.connect.length; j++ ) {
                         let elem  = connects.connect[j]
                         if((elem.from == name_ru && elem.to == funckBlocks.get(i).data.itemText)|| (elem.from == funckBlocks.get(i).data.itemText && elem.to == name_ru)){
+                            //состояние 1 - все ок, состояние 2 - есть ошибки, другое - нет связи
                             if(elem.state == "1") {
-                                //в connect  можно добавить данные о связи между блоками
                                 let componentLine = Qt.createComponent("line.qml");
                                 if (componentLine.status === Component.Ready) {
                                     let childline = componentLine.createObject(scene);
@@ -150,10 +184,7 @@ Window {
                                     childline.y1 = childRec.y + childRec.height/2;
                                     childline.x2 = funckBlocks.get(i).data.x + funckBlocks.get(i).data.width/2;
                                     childline.y2 = funckBlocks.get(i).data.y + funckBlocks.get(i).data.height/2;
-
-
                                     childline.statConnect = true
-
                                     if(funckBlocks.get(i).data.visible == false) childline.visible = false
                                     else childline.visible = true
                                     connectFunckBlock.append({firstNode: childRec, secondNode: funckBlocks.get(i).data, connect:childline })}
@@ -169,30 +200,30 @@ Window {
                                     childline.y2 = funckBlocks.get(i).data.y + funckBlocks.get(i).data.height/2;
                                     if(funckBlocks.get(i).data.visible == false) childline.visible = false
                                     else childline.visible = true
-
                                     childline.statConnect = false
                                     connectFunckBlock.append({firstNode: childRec, secondNode: funckBlocks.get(i).data, connect:childline })}
-
                             }
                             break;
                         }
                     }
                 }
             }
-
-
-
             funckBlocks.append({id:name_eng,data:childRec})
         }
     }
 
-    // поиск по блокам и связям
+    // find() - функция поиска в массиве
+    // Формальные параметры:
+    // model - массив;
+    // criteria - критерии поиска;
     function find(model, criteria) {
         for(var i = 0; i < model.count; ++i) if (criteria(model.get(i))) return model.get(i)
         return null
     }
 
-    //функция для скрытия связи
+    // visConnectNO() - функция для скрытия связи
+    // Формальные параметры:
+    // itemText - название функционального блока;
     function visConnectNO(itemText){
         for(let i = 0; i < connectFunckBlock.count; i++){
             let firstNode = connectFunckBlock.get(i).firstNode
@@ -204,7 +235,9 @@ Window {
         }
     }
 
-    //функция для отоброжения связи
+    // visConnect() - функция для отоброжения связи
+    // Формальные параметры:
+    // itemText - название функционального блока;
     function visConnect(itemText){
         for(let i = 0; i < connectFunckBlock.count; i++){
             let firstNode = connectFunckBlock.get(i).firstNode
@@ -216,7 +249,9 @@ Window {
         }
     }
 
-    //функция для чтения файлов
+    // readTextFile() - функция для чтения файлов
+    // Формальные параметры:
+    // file - путь до файла;
     function readTextFile(file)    {
         let rawFile = new XMLHttpRequest();
         let allText = ""
@@ -228,7 +263,6 @@ Window {
                 if(rawFile.status === 200 || rawFile.status === 0)
                 {
                     allText = rawFile.responseText;
-
                 }
             }
         }
@@ -236,7 +270,9 @@ Window {
         return allText
     }
 
-    //функция создание компонентов для функционального блока
+    // createItemComp() - функция создание компонентов для функционального блока
+    // Формальные параметры:
+    // st - строка;
     function createItemComp(st) {
         if (st === undefined){
             return 0
@@ -247,11 +283,14 @@ Window {
         else{
             let item = []
             let item1 = []
-            if(st.length === 1/*string[0].includes('!')*/){
+            //если длина 1, то вкладка 1, если 2 то 2
+            if(st.length === 1){
+                //проверка на ошибки
                 if(st[0].info.length<1){
                     return 1
                 }
                 else {
+                    //добавление данных в массив с компонентами
                     for (let i = 0; i < st[0].info.length; i++){
                         let elem = st[0].info[i]
                         item.push({number: elem.number, name: elem.name, type: elem.type, statePar: elem.state, infoPar: elem.info})
@@ -259,43 +298,39 @@ Window {
                     return {select: false, item:item}}
             }
             else {
-                // let selectItem = string[0].split('-')
+                //проверка на ошибки
                 if(st[0].info.length<1||st[1].info.length<1){
                     return 1
                 }
                 else{
+                    //добавление данных в массив с компонентами
                     for (let i = 0; i < st[0].info.length; i++){
                         let elem = st[0].info[i]
                         let info = elem.info
-
                         item.push({number: elem.number, name: elem.name, type: elem.type, statePar: elem.state, infoPar: info})
 
                     }
-
                     for (let j = 0; j < st[1].info.length; j++){
                         let elem = st[1].info[j]
                         item1.push({number: elem.number, name: elem.name, type: elem.type, statePar: elem.state, infoPar: elem.info})
                     }
-
                     return {select: true, item:item, item1:item1, itemText: st[0].mode, itemText1: st[1].mode}
                 }
             }
         }
     }
 
-    // тут хранятся созданные блоки
+    // Cписок для хранения ФБ
     ListModel {
         id: funckBlocks
-
     }
 
-    // тут хранятся связи между ними
+    // Cписок для хранения связей ФБ
     ListModel {
         id: connectFunckBlock
-
     }
 
-    //заголовок
+    // Заголовок программы
     Rectangle{
         x: Param.margin80
         y: 0
@@ -317,8 +352,7 @@ Window {
         }
     }
 
-    signal themeChange()
-    //кнопка для смены цвета темы
+    // Кнопка для смены цвета темы
     Rectangle{
         id: theme
         x: mainWindow.width - Param.buttonThemeSize - Param.margin80
@@ -326,6 +360,8 @@ Window {
         height: Param.buttonThemeSize
         width: Param.buttonThemeSize
         color: mainWindow.color
+
+        // Загрузка объекта кнопки смена цветы темы
         Component.onCompleted: {
             let component = Qt.createComponent("theme.qml");
             if (component.status === Component.Ready) {
@@ -333,15 +369,14 @@ Window {
                 childRec.onClick.connect(function(){
                     darkTheme = !darkTheme
                     themeChange()
-
                 })
             }
-
-
         }
     }
 
-    //сцена для отоброжения объектов
+    // Сцена для отоброжения объектов
+    // widthChange() - сигнал изменения ширины
+    // heightChange() - сигнал изменения длины
     Rectangle {
         id: scene
         color: darkTheme?Param.delemFirstColor:Param.lelemFirstColor
@@ -352,14 +387,15 @@ Window {
         radius: Param.elemRadius
         z: -1
         clip: true
-        signal widthChange()
 
+        signal widthChange()
+        //Событие смены размеров
         onWidthChanged: {
             widthChange()
         }
 
         signal heightChange()
-
+        //Событие смены размеров
         onHeightChanged: {
             heightChange()
         }
@@ -369,7 +405,7 @@ Window {
         }
     }
 
-    //тени
+    // Тень от сцены
     DropShadow {
         anchors.fill: scene
         horizontalOffset: Param.horizOffset
@@ -380,7 +416,16 @@ Window {
         source: scene
     }
 
-    //меню для отоброжения и скрытия объектов
+    // Меню для отоброжения и скрытия объектов
+    // Локальные переменные:
+    // createBlockPPU - создан ли ППУ;
+    // createBlockPPO - создан ли ППО;
+    // createBlockBASI - создан ли БАСИ;
+    // createBlockBAPD - создан ли БАПД;
+    // buttonPPU - кнопка для создания ППУ;
+    // buttonPPO - кнопка для создания ППО;
+    // buttonBASI - кнопка для создания БАСИ;
+    // buttonBAPD - кнопка для создания БАПД;
     Rectangle {
         id: menu
         color: darkTheme?Param.delemFirstColor:Param.lelemFirstColor
@@ -391,6 +436,7 @@ Window {
         radius: Param.elemRadius
         z: -1
 
+        // объявление перменных
         property string createBlockPPU:  "no"
         property string createBlockPPO:  "no"
         property string createBlockBASI:  "no"
@@ -401,17 +447,16 @@ Window {
         property var buttonBASI
         property var buttonBAPD
 
+        // объект для отображения группы
         Rectangle{
             width: Param.buttonSmallWidth
             height: Param.buttonSmallHeight
             color: parent.color
-
             anchors.leftMargin: Param.margin32
             anchors.left: parent.left
             Text{
                 width: parent.width
                 height: parent.height
-
                 text: "Текущие данные"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -421,26 +466,23 @@ Window {
             }
         }
 
-
+        // создание кнопок
         Component.onCompleted: {
-
-
             let component = Qt.createComponent("smallButton.qml");
             if (component.status === Component.Ready) {
-
                 let childRec = component.createObject(menu)
                 childRec.x = parent.x + Param.margin32
                 childRec.y = parent.y  +Param.buttonSmallHeight
                 childRec.itemText = "Отобразить ППУ"
                 childRec.itemTextOnClick = "Скрыть ППУ"
                 buttonPPU = childRec
+
                 let childRec1 = component.createObject(menu)
                 childRec1.x = parent.x + Param.margin32
                 childRec1.y = parent.y  +Param.margin24 +Param.buttonSmallHeight+Param.buttonSmallHeight
                 childRec1.itemText = "Отобразить БАСИ"
                 childRec1.itemTextOnClick = "Скрыть БАСИ"
                 buttonBASI= childRec1
-
 
                 let childRec2 = component.createObject(menu)
                 childRec2.x = parent.x + Param.margin32
@@ -449,7 +491,6 @@ Window {
                 childRec2.itemTextOnClick = "Скрыть БАПД"
                 buttonBAPD= childRec2
 
-
                 let childRec3 = component.createObject(menu)
                 childRec3.x = parent.x + Param.margin32
                 childRec3.y = parent.y  +Param.margin24*3 +Param.buttonSmallHeight*3+Param.buttonSmallHeight
@@ -457,10 +498,7 @@ Window {
                 childRec3.itemTextOnClick = "Скрыть ППО"
                 buttonPPO= childRec3
 
-
-
-                //параметры БА
-
+                // проверка на ошибки в файле
                 if (readTextFile("onboardEquipment.json") == ""){
                     let componentError = Qt.createComponent("errorInfo.qml");
                     let child = componentError.createObject(mainWindow);
@@ -470,31 +508,31 @@ Window {
                     child.title_error = "ОШИБКА"
                     childRec.onClick.connect(function(){
                         child = componentError.createObject(mainWindow);
-                                            child.x = mainWindow.width/2 - Param.itemCompWidth/2
-                                            child.y = mainWindow.height/2 - Param.itemCompHeight/2
-                                            child.desc_error = "Отсутсвует файл с информацией"
-                                            child.title_error = "ОШИБКА"
+                        child.x = mainWindow.width/2 - Param.itemCompWidth/2
+                        child.y = mainWindow.height/2 - Param.itemCompHeight/2
+                        child.desc_error = "Отсутсвует файл с информацией"
+                        child.title_error = "ОШИБКА"
                     })
                     childRec1.onClick.connect(function(){
                         child = componentError.createObject(mainWindow);
-                                            child.x = mainWindow.width/2 - Param.itemCompWidth/2
-                                            child.y = mainWindow.height/2 - Param.itemCompHeight/2
-                                            child.desc_error = "Отсутсвует файл с информацией"
-                                            child.title_error = "ОШИБКА"
+                        child.x = mainWindow.width/2 - Param.itemCompWidth/2
+                        child.y = mainWindow.height/2 - Param.itemCompHeight/2
+                        child.desc_error = "Отсутсвует файл с информацией"
+                        child.title_error = "ОШИБКА"
                     })
                     childRec2.onClick.connect(function(){
                         child = componentError.createObject(mainWindow);
-                                            child.x = mainWindow.width/2 - Param.itemCompWidth/2
-                                            child.y = mainWindow.height/2 - Param.itemCompHeight/2
-                                            child.desc_error = "Отсутсвует файл с информацией"
-                                            child.title_error = "ОШИБКА"
+                        child.x = mainWindow.width/2 - Param.itemCompWidth/2
+                        child.y = mainWindow.height/2 - Param.itemCompHeight/2
+                        child.desc_error = "Отсутсвует файл с информацией"
+                        child.title_error = "ОШИБКА"
                     })
                     childRec3.onClick.connect(function(){
                         child = componentError.createObject(mainWindow);
-                                            child.x = mainWindow.width/2 - Param.itemCompWidth/2
-                                            child.y = mainWindow.height/2 - Param.itemCompHeight/2
-                                            child.desc_error = "Отсутсвует файл с информацией"
-                                            child.title_error = "ОШИБКА"
+                        child.x = mainWindow.width/2 - Param.itemCompWidth/2
+                        child.y = mainWindow.height/2 - Param.itemCompHeight/2
+                        child.desc_error = "Отсутсвует файл с информацией"
+                        child.title_error = "ОШИБКА"
                     })
 
 
@@ -502,8 +540,8 @@ Window {
                 else {
                     let file = JSON.parse(readTextFile("onboardEquipment.json"))
 
+                    // задание функции на событие кнопок при нажатии
                     let itemCompPPU = createItemComp(file.BA.PPU)
-
                     childRec.onClick.connect(function(){
                         if(menu_DB.bapd != null) {
                             menu_DB.createBlockBAPD = "no"
@@ -538,9 +576,8 @@ Window {
                         }
                     }
                     )
-                    //параметры БА
-                    let itemCompBASI = createItemComp(file.BA.BASI)
 
+                    let itemCompBASI = createItemComp(file.BA.BASI)
                     childRec1.onClick.connect(function(){
                         if(menu_DB.bapd != null) {
                             menu_DB.createBlockBAPD = "no"
@@ -575,9 +612,8 @@ Window {
                         }
                     }
                     )
-                    //параметры БА
-                    let itemCompBAPD = createItemComp(file.BA.BAPD)
 
+                    let itemCompBAPD = createItemComp(file.BA.BAPD)
                     childRec2.onClick.connect(function(){
                         if(menu_DB.bapd != null) {
                             menu_DB.createBlockBAPD = "no"
@@ -612,6 +648,7 @@ Window {
                         }
                     }
                     )
+
                     let itemCompPPO = createItemComp(file.BA.PPO)
                     childRec3.onClick.connect(function(){
                         if(menu_DB.bapd != null) {
@@ -648,14 +685,11 @@ Window {
                     }
                     )
                 }
-
-
-
             }
         }
     }
 
-    //тени
+    // Тень от меню
     DropShadow {
         anchors.fill: menu
         horizontalOffset: Param.horizOffset
@@ -666,8 +700,16 @@ Window {
         source: menu
     }
 
-
-    //меню для отоброжения и скрытия объектов из БД
+    // Меню для отоброжения и скрытия объектов из БД
+    // Локальные переменные:
+    // createBlockBASI - создана ли таблица для БАСИ;
+    // createBlockBAPD - создана ли таблица для БАПД;
+    // basiLeft - отображается ли таблица БАСИ с лева;
+    // bapdLeft - отображается ли таблица БАПД с лева;
+    // basi - таблица БАСИ;
+    // bapd - таблица БАПД;
+    // buttonBapdDB - кнопка для создания таблицы о БАСИ;
+    // buttonBasiDB - кнопка для создания таблицы о БАПД;
     Rectangle {
         id: menu_DB
         color: darkTheme?Param.delemFirstColor:Param.lelemFirstColor
@@ -677,6 +719,8 @@ Window {
         x: Param.margin80
         radius: Param.elemRadius
         z: -1
+
+        //объявление переменных
         property string createBlockBASI:  "no"
         property string createBlockBAPD:  "no"
 
@@ -689,17 +733,16 @@ Window {
         property var buttonBapdDB
         property var buttonBasiDB
 
+        // объект для отображения группы
         Rectangle{
             width: Param.buttonSmallWidth
             height: Param.buttonSmallHeight
             color: parent.color
-
             anchors.leftMargin: Param.margin32
             anchors.left: parent.left
             Text{
                 width: parent.width
                 height: parent.height
-
                 text: "Данные из БД"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -707,28 +750,26 @@ Window {
                 font.pointSize: Param.textButtonSize
                 color: darkTheme? Param.accentСolor1:Param.ltextColor1
             }
-
         }
+
+        //создание кнопок
         Component.onCompleted: {
             let component = Qt.createComponent("smallButton.qml");
             if (component.status === Component.Ready) {
 
+                //создание кнопки для создания таблицы по БАПД
                 let childRec = component.createObject(menu_DB)
-
                 childRec.x = parent.x + Param.margin32
                 childRec.y = parent.y  +Param.buttonSmallHeight
                 childRec.itemText = "Данные по БАПД"
                 childRec.itemTextOnClick = "Данные по БАПД"
                 buttonBapdDB = childRec
                 childRec.onClick.connect(function(){
-
-
                     if(createBlockBAPD === "no") {
-
                         //скрыть все функциональные блоки
+                        childRec.click = "yes"
                         for(let j = 0; j < funckBlocks.count; j++) {
                             funckBlocks.get(j).data.visible = false
-
                         }
                         //скрыть все связи
                         for(let i = 0; i < connectFunckBlock.count; i++){
@@ -751,7 +792,7 @@ Window {
                             if (menu.createBlockBASI!="no" )menu.createBlockBASI = "no-vis"
                             menu.buttonBASI.click = "no"
                         }
-
+                        //проверка файла на ошибки
                         if (readTextFile("onboardEquipment.json") == "") {
                             let componentError = Qt.createComponent("errorInfo.qml");
                             if (componentError.status === Component.Ready) {
@@ -772,7 +813,6 @@ Window {
                                     child.y = mainWindow.height/2 - Param.itemCompHeight/2
                                     child.desc_error = "Файл с данными для БД содержит некорректные данные"
                                     child.title_error = "ОШИБКА"
-
                                 }
                             }
                             else if (file.BD.BAPD == undefined){
@@ -783,10 +823,10 @@ Window {
                                     child.y = mainWindow.height/2 - Param.itemCompHeight/2
                                     child.desc_error = "Файл с данными для БАППД содержит некорректные данные"
                                     child.title_error = "ОШИБКА"
-
                                 }
                             }
                             else{
+                                // если нет ошибок создание таблицы
                                 let component2 = Qt.createComponent("DB.qml");
                                 if (component2.status === Component.Ready) {
                                     let childRec2 = component2.createObject(scene)
@@ -797,19 +837,15 @@ Window {
                                         childRec2.x = Param.margin32*2+(scene.width - Param.margin32*3)/2
                                     }
                                     childRec2.y = Param.margin32
-
                                     childRec2.widthAll = (scene.width - Param.margin32*3)/2
                                     childRec2.heightAll = scene.height - Param.margin32*2
                                     childRec2.title = "БАПД"
-
                                     let item = []
                                     for (let i = 0; i < file.BD.BAPD.length; i++){
                                         let elem = file.BD.BAPD[i]
 
                                         item.push({number: elem.number, date: elem.date, time: elem.time, error: elem.error})
-
                                     }
-
                                     childRec2.itemComp = item
                                     childRec2.close.connect(function(){
                                         childRec2.destroy()
@@ -828,32 +864,26 @@ Window {
                         createBlockBAPD = "no"
                         bapdLeft = false
                     }
+                })
 
-                }
-                )
-
-
+                //создание кнопки для создания таблицы по БАСИ
                 let childRec1 = component.createObject(menu_DB)
                 childRec1.x = parent.x + Param.margin32
                 childRec1.y = parent.y  +Param.margin24 +Param.buttonSmallHeight+Param.buttonSmallHeight
                 childRec1.itemText = "Данные по БАСИ"
                 childRec1.itemTextOnClick = "Данные по БАСИ"
-buttonBasiDB = childRec1
-                //параметры БА
-                //                    let itemCompBASI = createItemComp(file.BA.BASI)
-
+                buttonBasiDB = childRec1
                 childRec1.onClick.connect(function(){
                     if(createBlockBASI=== "no") {
+                        childRec1.click = "yes"
                         //скрыть все функциональные блоки
                         for(let j = 0; j < funckBlocks.count; j++) {
                             funckBlocks.get(j).data.visible = false
-
                         }
                         //скрыть все связи
                         for(let i = 0; i < connectFunckBlock.count; i++){
                             connectFunckBlock.get(i).connect.visible = false
                         }
-                        //поменять надписи на кнопках
                         //поменять надписи на кнопках
                         if(menu.buttonPPU != null) {
                             if (menu.createBlockPPU!="no" ) menu.createBlockPPU = "no-vis"
@@ -871,8 +901,7 @@ buttonBasiDB = childRec1
                             if (menu.createBlockBASI!="no" )menu.createBlockBASI = "no-vis"
                             menu.buttonBASI.click = "no"
                         }
-
-
+                        //проверка файла на ошибки
                         if (readTextFile("onboardEquipment.json") == "") {
                             let componentError = Qt.createComponent("errorInfo.qml");
                             if (componentError.status === Component.Ready) {
@@ -884,7 +913,6 @@ buttonBasiDB = childRec1
                             }
                         }
                         else{
-
                             let file = JSON.parse(readTextFile("onboardEquipment.json"))
                             if (file.BD == undefined){
                                 let componentError = Qt.createComponent("errorInfo.qml");
@@ -894,7 +922,6 @@ buttonBasiDB = childRec1
                                     child.y = mainWindow.height/2 - Param.itemCompHeight/2
                                     child.desc_error = "Файл с данными для БД содержит некорректные данные"
                                     child.title_error = "ОШИБКА"
-
                                 }
                             }
                             else if (file.BD.BAPD == undefined){
@@ -905,10 +932,10 @@ buttonBasiDB = childRec1
                                     child.y = mainWindow.height/2 - Param.itemCompHeight/2
                                     child.desc_error = "Файл с данными для БАППД содержит некорректные данные"
                                     child.title_error = "ОШИБКА"
-
                                 }
                             }
                             else{
+                                // если ошибок нету создание таблицы
                                 let component2 = Qt.createComponent("DB.qml");
                                 if (component2.status === Component.Ready) {
                                     let childRec2 = component2.createObject(scene)
@@ -917,23 +944,16 @@ buttonBasiDB = childRec1
                                         basiLeft = true}
                                     else{
                                         childRec2.x = Param.margin32*2+(scene.width - Param.margin32*3)/2
-
                                     }
-
                                     childRec2.y = Param.margin32
-
                                     childRec2.widthAll = (scene.width - Param.margin32*3)/2
                                     childRec2.heightAll = scene.height - Param.margin32*2
                                     childRec2.title = "БАСИ"
-
                                     let item = []
                                     for (let i = 0; i < file.BD.BASI.length; i++){
                                         let elem = file.BD.BASI[i]
-
                                         item.push({number: elem.number, date: elem.date, time: elem.time, error: elem.error})
-
                                     }
-
                                     childRec2.itemComp = item
                                     childRec2.close.connect(function(){
                                         childRec2.destroy()
@@ -949,19 +969,16 @@ buttonBasiDB = childRec1
                         }
                     }
                     else if(createBlockBASI === "yes"){
-
                         basi.destroy()
                         createBlockBASI = "no"
                         basiLeft = false
                     }
-
-                }
-                )
+                })
             }
         }
     }
 
-    //тени
+    // Тень от меню
     DropShadow {
         anchors.fill: menu_DB
         horizontalOffset: Param.horizOffset
@@ -972,7 +989,9 @@ buttonBasiDB = childRec1
         source: menu_DB
     }
 
-    //меню для отоброжения связей и расположения
+    // Меню для отоброжения связей и расположения
+    // Локальные переменные:
+    // visibleConnect - отображаются ли связи
     Rectangle {
         id: menu2
         color: mainWindow.color
@@ -982,17 +1001,20 @@ buttonBasiDB = childRec1
         x: Param.margin80
         radius: Param.elemRadius
         z: -1
+
+        // объявление переменных
         property bool visibleConnect: true
+
+        // создание кнопок
         Component.onCompleted: {
             let component = Qt.createComponent("bigButton.qml");
             if (component.status === Component.Ready) {
-                // отоброжение связей
+                // создание кнопки для скрытия и отображения связей
                 let childRec4 = component.createObject(menu2)
                 childRec4.x = parent.x
                 childRec4.y = parent.y
                 childRec4.itemText = "Показать связи"
                 childRec4.itemTextOnClick = "Скрыть связи"
-
                 childRec4.onClick.connect(function(){
                     if(menu2.visibleConnect){
                         menu2.visibleConnect = false
@@ -1019,21 +1041,16 @@ buttonBasiDB = childRec1
                                 child.desc_error = "В данный момент связи отсутствуют"
                                 child.title_error = "ПРЕДУПРЕЖДЕНИЕ"
                             }
-
-
                         }
-
                         for(let i = 0; i < connectFunckBlock.count; i++){
                             connectFunckBlock.get(i).connect.visible = false
                         }
                     }
                     else{
                         for(let i = 0; i < connectFunckBlock.count; i++){
-
                             let firstNode = connectFunckBlock.get(i).firstNode
                             let secondNode = connectFunckBlock.get(i).secondNode
                             let connect = connectFunckBlock.get(i).connect
-
                             if(firstNode.visible && secondNode.visible){
                                 connect.x1 = firstNode.x + firstNode.width/2
                                 connect.y1 = firstNode.y + firstNode.height/2
@@ -1046,8 +1063,7 @@ buttonBasiDB = childRec1
                     }
                 })
 
-
-                // упорядочить связи
+                // создание кнопки для упорядочивания объектов
                 let childRec5 = component.createObject(menu2)
                 childRec5.x = parent.x
                 childRec5.y = parent.y + Param.margin32 + Param.buttonBigHeight
@@ -1056,7 +1072,6 @@ buttonBasiDB = childRec1
                 childRec5.onClick.connect(function(){
                     //readTextFile("file:/pract_project/task2-1/text.txt");
                     let visFB = true
-
                     if(funckBlocks.count < 1){
                         visFB = false
                     }
@@ -1069,7 +1084,6 @@ buttonBasiDB = childRec1
                             else visFB = false
                         }
                     }
-
                     if(!visFB){
                         let componentError = Qt.createComponent("errorInfo.qml");
                         if (componentError.status === Component.Ready) {
@@ -1086,30 +1100,25 @@ buttonBasiDB = childRec1
                             PPU.data.x = Param.margin48
                             PPU.data.y = PPU.data.dragMaxY
                         }
-
                         let PPO = find(funckBlocks, function(item) { return item.id === "PPO" })
                         if(PPO !== null) {
                             PPO.data.x = scene.width - Param.margin48 - PPO.data.width
                             PPO.data.y = PPO.data.dragMaxY
                         }
-
                         let BASI = find(funckBlocks, function(item) { return item.id === "BASI" })
                         if(BASI !== null) {
                             BASI.data.x = scene.width/2 - Param.margin48/2 - BASI.data.width
                             BASI.data.y = BASI.data.dragMinY
                         }
-
                         let BAPD = find(funckBlocks, function(item) { return item.id === "BAPD" })
                         if(BAPD!== null) {
                             BAPD.data.x = scene.width/2 + Param.margin48/2
                             BAPD.data.y = BAPD.data.dragMinY
                         }
-
                         for(let i = 0; i < connectFunckBlock.count; i++){
                             let firstNode = connectFunckBlock.get(i).firstNode
                             let secondNode = connectFunckBlock.get(i).secondNode
                             let connect = connectFunckBlock.get(i).connect
-
                             connect.x1 = firstNode.x + firstNode.width/2
                             connect.y1 = firstNode.y + firstNode.height/2
                             connect.x2 = secondNode.x + firstNode.width/2
@@ -1117,9 +1126,7 @@ buttonBasiDB = childRec1
 
                         }
                     }
-                }
-                )
-
+                })
             }
         }
     }

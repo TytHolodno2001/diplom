@@ -3,17 +3,32 @@ import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
 import Param 1.0
 
+// Объект: Большая кнопка
+// Название: bigButton
+// Переменные:
+// state_text
+//
+//
+//
+//
+//
+//
+//
+//
+
 Rectangle{
     id: info_rect
+
+    // объявление перменных
     signal close();
     property string state_text
     property string text
     property string title_text
-
     property int margin: Param.margin24
     property int smallMargin: Param.margin16
     property int elemWidth: Param.itemCompWidth - Param.margin24
     property int elemHeight: Param.itemCompElemHeight
+
     Rectangle {
         id: info
         width: Param.itemCompWidth
@@ -61,7 +76,8 @@ Rectangle{
             //закрыть окно
             MouseArea {
                 anchors.fill: parent
-                onClicked: {
+                //событие при клике
+            onClicked: {
                     info_rect.close()
                     }
             }
@@ -170,13 +186,14 @@ Rectangle{
     }
 
 
+    //тень объекта
     DropShadow {
         anchors.fill: info
         horizontalOffset: Param.horizOffset
         verticalOffset: Param.verticOffset
         radius: Param.mainRadius
         samples: Param.mainSamples
-        color: darkTheme?Param.dDropShadowColor:Param.lDropShadowColor
+
         source: info
     }
 }

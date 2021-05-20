@@ -1,6 +1,8 @@
 pragma Singleton // Указываем, что этот QML Тип является синглетоном
 import QtQuick 2.0
 
+// Объект: список параметров
+// Название: parameters
 Item {
     //значения цветов
     property color accentСolor1: "#48D3FF"

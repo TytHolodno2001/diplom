@@ -3,12 +3,16 @@ import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
 import Param 1.0
 
+// Объект: Кнопка смены темы
+// Название: theme
+// Переменные:
+// onClick - сигнал при клике.
 Item {
+    // объявление перменных
     signal onClick();
 
     Rectangle {
         id:theme
-
         width: Param.buttonThemeSize
         height: Param.buttonThemeSize
         color: darkTheme?Param.delemFirstColor:Param.lelemFirstColor
@@ -19,7 +23,7 @@ Item {
             anchors.fill: parent
             hoverEnabled : true
 
-            // при наведении
+            //событие при наведении и после
             onEntered:{
                 theme.border.width = Param.sizeFrame
                 theme.border.color = Param.accentСolor3
@@ -28,14 +32,13 @@ Item {
                 theme.border.width = 0
             }
 
-            //после клика
+            //событие при клике
             onClicked:
             {
                 onClick()
             }
         }
-
-
+        //иконка
         Image {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
@@ -44,7 +47,7 @@ Item {
         }
     }
 
-    //тени
+    //тень объекта
     DropShadow {
         anchors.fill: theme
         horizontalOffset: Param.horizOffset

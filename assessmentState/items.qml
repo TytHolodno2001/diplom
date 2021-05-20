@@ -4,9 +4,16 @@ import Qt.labs.qmlmodels 1.0
 import Param 1.0
 import QtGraphicalEffects 1.12
 
-
+// Объект: Компоненты
+// Название: items
+// Переменные:
+// title - заголовок формы объекта;
+// itemComp - информация о компоненте БА;
+// close - сигнал закрытия формы объекта;
 Rectangle{
     id: main_rec
+
+    // объявление перменных
     property int elemWidth: Param.itemsWidth
     property int elemHeight: Param.itemsHeight
     property int titleHeight: Param.itemsTitleHeight
@@ -17,7 +24,7 @@ Rectangle{
     property color accentColor: Param.accentСolor1
     property color fontColor: darkTheme?Param.dtextColor1:Param.ltextColor1
 
-    property string title: "Liza"
+    property string title
 
     // параметры в списоk
     property var itemComp
@@ -33,6 +40,8 @@ Rectangle{
         height: elemHeight
         color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
         radius: Param.elemRadius
+
+        //заголовок
         Rectangle {
             id:table_info
             color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
@@ -62,6 +71,7 @@ Rectangle{
                 }
             }
 
+            // кнопка закрытия формы объекта
             Rectangle {
                 id:cross
                 width: titleHeight
@@ -80,13 +90,14 @@ Rectangle{
                 //закрыть окно
                 MouseArea {
                     anchors.fill: parent
+                    //событие при клике
                     onClicked: {
                         main_rec.close()
                     }
                 }
             }
 
-            //сам список
+            //список кнопок
             Rectangle {
                 id: listPar
                 anchors.top: parent.top
@@ -125,7 +136,8 @@ Rectangle{
                             property bool create: false
                             anchors.fill: parent
                             hoverEnabled : true
-                            // при наведении
+
+                            //событие при наведении и после
                             onEntered:{
                                 parent.border.width = Param.sizeFrame
                                 parent.border.color = Param.accentСolor3
@@ -135,7 +147,7 @@ Rectangle{
                                 parent.border.color= Param.accentСolor2
                             }
 
-                            //при клике
+                            //событие при клике и после
                             onPressed:
                             {
                                 parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
@@ -151,6 +163,7 @@ Rectangle{
                                 border.color= Param.accentСolor2
                             }
 
+                            //событие при клике - отображение информации в зависимости от ее  типа
                             onClicked: {
                                 if(!create){
                                     // ТУТ JSON
@@ -158,7 +171,6 @@ Rectangle{
                                         let component = Qt.createComponent("info.qml");
                                         if (component.status === Component.Ready) {
                                             var child= component.createObject(content);
-                                            //открывается справа или слева
                                             child.x = elemWidth + margin
                                             child.y = 0
 
@@ -178,11 +190,9 @@ Rectangle{
                                         }
                                     }
                                     if(type == "list") {
-
                                         let component = Qt.createComponent("list.qml");
                                         if (component.status === Component.Ready) {
                                             var child= component.createObject(content);
-                                            //открывается справа или слева
                                             child.x = elemWidth + margin
                                             child.y = 0
                                             let items = []
@@ -190,7 +200,6 @@ Rectangle{
                                                 let elem = info.get(0)
                                                 items.push({number: elem.number, value: elem.value, statePar: elem.state})
                                             }
-
 
                                             child.itemComp = items
                                             child.title = name
@@ -207,7 +216,6 @@ Rectangle{
                                         let component = Qt.createComponent("table.qml");
                                         if (component.status === Component.Ready) {
                                             let childRec = component.createObject(content)
-//                                            let string = info.split('-')
                                             childRec.x = elemWidth + margin
                                             childRec.y = 0
                                             let rows = []
@@ -216,7 +224,7 @@ Rectangle{
                                                 rows.push({number: elem.number, tnp: elem.tnp, tkp: elem.tkp, tnr: elem.tnr, tkr: elem.tkr, mode: elem.mode})
                                             }
                                             childRec.tableCell = rows
-childRec.statePar = statePar
+                                            childRec.statePar = statePar
                                             childRec.title = name
 
                                             create = true
@@ -233,14 +241,13 @@ childRec.statePar = statePar
                                         let component = Qt.createComponent("expressHelp.qml");
                                         if (component.status === Component.Ready) {
                                             var child= component.createObject(content);
-                                            //открывается справа или слева
                                             child.x = elemWidth + margin
                                             child.y = 0
                                             create = true
 
                                             child.title = info.mode
                                             let tableInfo = []
-child.statePar = statePar
+                                            child.statePar = statePar
                                             child.numberProduct = info.number
                                             child.dateProduct = info.date
                                             child.timeProduct = info.time
@@ -265,10 +272,9 @@ child.statePar = statePar
                                         let component = Qt.createComponent("expressHelpBASI.qml");
                                         if (component.status === Component.Ready) {
                                             var child= component.createObject(content);
-                                            //открывается справа или слева
                                             child.x = elemWidth + margin
                                             child.y = 0
-child.statePar = statePar
+                                            child.statePar = statePar
 
                                             let tableInfo = []
 
@@ -279,7 +285,7 @@ child.statePar = statePar
                                             for (let i = 0; i < info.inform.length; i++){
                                                 let elem = info.inform[i]
                                                 tableInfo.push({mode: elem.mode, bstp: elem.bstp, betp: elem.betp, bstr: elem.bstr, betr: elem.betr, info: elem.info})
-                                            console.log(elem.info)
+                                                console.log(elem.info)
                                             }
 
                                             child.itemComp = tableInfo
@@ -310,6 +316,7 @@ child.statePar = statePar
             }
         }
     }
+    //тень объекта
     DropShadow {
         anchors.fill: content
         horizontalOffset: Param.horizOffset

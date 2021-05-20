@@ -3,10 +3,18 @@ import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.12
 import Param 1.0
 
+// Объект: Маленькая кнопка
+// Название: smallButton
+// Переменные:
+// itemText - текст для кнопки 1;
+// itemTextOnClick - текст для кнопки 2;
+// click - нажата ли кнопка;
+// onClick - сигнал при клике на кнопку.
 Item {
-    property string itemText: "Текст"
-    property string itemTextOnClick: "Текст"
-    property string click: "no"
+    // объявление перменных
+    property string itemText
+    property string itemTextOnClick
+    property string click
     signal onClick();
     onClickChanged: {
         if(click == "no"){
@@ -19,7 +27,7 @@ Item {
         height: Param.buttonSmallHeight
         color: darkTheme?Param.delemSecondColor:Param.lelemSecondColor
         radius: Param.elemRadius
-
+        //заголовок
         Text{
             width: parent.width - parent.height
             height: parent.height
@@ -39,7 +47,7 @@ Item {
             anchors.fill: parent
             hoverEnabled : true
 
-            // при наведении
+            //событие при наведении и после
             onEntered:{
                 smallButton.border.width = Param.sizeFrame
                 smallButton.border.color = Param.accentСolor3
@@ -49,7 +57,7 @@ Item {
                 smallButton.border.color = Param.accentСolor1
             }
 
-            //при клике
+            //событие при клике и после
             onPressed:{
 
                 parent.color = darkTheme?Param.delemThirdColor:Param.lelemThirdColor
@@ -62,7 +70,7 @@ Item {
                 parent.color = darkTheme?Param.delemSecondColor:Param.lelemSecondColor
             }
 
-            //после клика
+            //событие при клике
             onClicked:
             {
                 if(click == "no") {
@@ -79,6 +87,7 @@ Item {
         }
 
 
+        // икнока кнопки
         Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: 2
@@ -87,7 +96,6 @@ Item {
             height: parent.height - 4
             color: parent.color
             radius: Param.elemRadius
-
 
             Image {
                 anchors.verticalCenter: parent.verticalCenter
@@ -100,6 +108,7 @@ Item {
     }
 
     //тени
+    //тень объекта
     DropShadow {
         anchors.fill: smallButton
         horizontalOffset: Param.horizOffset

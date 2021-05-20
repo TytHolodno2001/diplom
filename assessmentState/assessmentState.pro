@@ -1,4 +1,5 @@
 QT += quick
+QT += quickcontrols2
 
 CONFIG += c++11
 
@@ -17,7 +18,8 @@ TRANSLATIONS += \
     task2-1_ru_RU.ts
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
+QML_IMPORT_PATH = "C:\Qt\5.15.2\mingw81_64\qml"
+QML2_IMPORT_PATH = "C:\Qt\5.15.2\mingw81_64\qml"
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
