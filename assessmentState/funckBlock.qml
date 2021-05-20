@@ -301,7 +301,7 @@ Rectangle{
                 width: Param.fBSelectBigWidth
                 height: dragRect.itemHeight
                 color: dragRect.item
-                anchors.left: Param.fBSelectBigWidth
+                anchors.left: parent.left
                 anchors.leftMargin: 0
                 radius: dragRect.menuRadius
 
@@ -488,11 +488,10 @@ Rectangle{
             Component {
                 id:delItem
                 Rectangle {
-
                     width: dragRect.itemWidth
                     height: dragRect.itemHeight
-                    anchors.right: itemMenu.right
-                    anchors.rightMargin: dragRect.itemMargin
+//                    anchors.right: itemMenu.right
+//                    anchors.rightMargin: dragRect.itemMargin
                     radius: dragRect.menuRadius
                     color: dragRect.item
                     Rectangle {

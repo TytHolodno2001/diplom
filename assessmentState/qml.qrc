@@ -7,7 +7,6 @@
         <file>bigButton.qml</file>
         <file>smallButton.qml</file>
         <file>theme.qml</file>
-        <file>info.qml</file>
         <file>errorInfo.qml</file>
         <file>table.qml</file>
         <file>list.qml</file>

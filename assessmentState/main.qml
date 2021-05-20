@@ -558,6 +558,7 @@ Window {
                         if(createBlockPPU === "no") {
                             createFunckBlock("PPU", "ППУ", Param.iconPPUDark, itemCompPPU)
                             createBlockPPU = "yes"
+                            childRec.click = "yes"
                         }
                         else if(createBlockPPU === "yes"){
                             let PPU = find(funckBlocks, function(item) { return item.id === "PPU" })
@@ -594,6 +595,7 @@ Window {
                         if(createBlockBASI === "no") {
                             createFunckBlock("BASI", "БАСИ", Param.iconBASIDark, itemCompBASI)
                             createBlockBASI = "yes"
+                            childRec1.click = "yes"
                         }
                         else if(createBlockBASI === "yes"){
                             let PPU = find(funckBlocks, function(item) { return item.id === "BASI" })
@@ -630,6 +632,7 @@ Window {
                         if(createBlockBAPD === "no") {
                             createFunckBlock("BAPD", "БАПД", Param.iconBAPDDark , itemCompBAPD)
                             createBlockBAPD = "yes"
+                            childRec2.click = "yes"
                         }
                         else if(createBlockBAPD === "yes"){
                             let PPU = find(funckBlocks, function(item) { return item.id === "BAPD" })
@@ -666,6 +669,7 @@ Window {
                         if(createBlockPPO === "no") {
                             createFunckBlock("PPO", "ППО", Param.iconPPODark, itemCompPPO)
                             createBlockPPO = "yes"
+                            childRec3.click = "yes"
                         }
                         else if(createBlockPPO === "yes"){
                             let PPU = find(funckBlocks, function(item) { return item.id === "PPO" })
